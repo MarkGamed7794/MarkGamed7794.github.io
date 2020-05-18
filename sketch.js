@@ -78,7 +78,7 @@ var enemyAttackTimer = 0;
 var damagemultiplier = 1;
 
 function loadAssets(){
-  //fnt = loadFont("PressStart2P.ttf")
+  fnt = loadFont("PressStart2P.ttf")
   assets.astro = loadImage("assets/astro.png")
   worlds = loadJSON("worlds.json")
   moves = loadJSON("moves.json")
@@ -395,7 +395,7 @@ function drawAnimation(){
 }
 // ----------------------------  DRAW LOOP ----------------------------
 function draw() {
-  //textFont(fnt)
+  textFont(fnt)
   if(screen == "fight"){
     background(0,200,0);
     drawBattleScene()
