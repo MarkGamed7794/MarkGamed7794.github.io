@@ -1,0 +1,43 @@
+{"stages":[
+  {"world":1,"stage":1,"name":"An Adventurer's Tail","waves":[
+    {"enemies":[
+      {"name":"Mushboom","hp":7,"maxhp":7,"moves":["Poison Blush","Explosion"]}
+    ]}],
+   "firstrewards":{"xp":200,"coins":100,"items":{"mushrooms":5}},
+   "rewards":{"xp":50,"coins":10,"items":{"mushrooms":2}}
+  },
+  {"world":1,"stage":2,"name":"Big Brother","waves":[
+    {"enemies":[
+      {"name":"Mushboom","hp":7,"maxhp":7,"moves":["Poison Blush","Explosion"]}
+    ]},
+    {"enemies":[
+      {"name":"Mushdoom","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]}],
+   "firstrewards":{"xp":250,"coins":200,"items":{"mushrooms":5}},
+   "rewards":{"xp":100,"coins":70,"items":{"mushrooms":3}}
+  },
+  {"world":1,"stage":3,"name":"Double Trouble","waves":[
+    {"enemies":[
+      {"name":"Mushdoom","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]},
+    {"enemies":[
+      {"name":"Mushdoom","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]}],
+   "firstrewards":{"xp":350,"coins":200,"items":{"mushrooms":6}},
+   "rewards":{"xp":150,"coins":100,"items":{"mushrooms":3}}
+  },
+  {"world":1,"stage":4,"name":"Where Wolf?","waves":[
+    {"enemies":[
+      {"name":"Mushdoom","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]},
+    {"enemies":[
+      {"name":"Elderboom","hp":22,"maxhp":22,"moves":["Royal Flush","Hyper Explosion","Mechanical Boomburst"]},
+      {"name":"Mushdoom","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]},
+     {"enemies":[
+      {"name":"Werewolf","hp":10,"maxhp":10,"moves":["Poison Flush","Super Explosion"]}
+    ]}],
+   "firstrewards":{"xp":750,"coins":1000,"items":{"mushrooms":5,"sharp blades":2}},
+   "rewards":{"xp":350,"coins":500,"items":{"mushrooms":4,"sharp blades":1}}
+  }
+]}

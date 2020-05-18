@@ -1,0 +1,32 @@
+{
+  "Stick":{"damage":2,"level":1,"moves":[
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3","description":"Deals 3 damage."}
+  ]},
+  "Long Stick":{"damage":4,"level":2,"moves":[
+    {"name":"Whip and Snack","onUse":"attack(5);","damageShown":"-5","description":"Deals 5 damage."}
+  ]},
+  "Normal Spear":{"damage":3,"level":3,"moves":[
+    {"name":"An Idiot Weapon","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn","description":"Applies a 3x damage multiplier, but only 50% of the time."}
+  ]},
+  "Frying Pan":{"damage":4,"level":4,"moves":[
+    {"name":"Special Delivery","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn","description":"Applies a 3x damage multiplier, but only 50% of the time."}
+  ]},
+  "Sand Launcher":{"damage":12,"level":5,"moves":[
+    {"name":"Blind Man","onUse":"if(currentTurn == 1){stun(1,-1)}","damageShown":"Stuns everyone on turn 1","passive":"turn","description":"Stuns everyone on the first turn of every wave."}
+  ]},
+  "Chainsaw":{"damage":25,"level":7,"moves":[
+    {"name":"Screeching Solo","onUse":"attack(5,-1);","damageShown":"-5 to everyone, every turn","description":"Deals 5 damage to every enemy, every turn."}
+  ]},
+  "Balloon Rapier":{"damage":32,"level":9,"moves":[
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
+  ]},
+  "Snow Launcher":{"damage":64,"level":11,"moves":[
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
+  ]},
+  "Rake":{"damage":69,"level":12,"moves":[
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
+  ]},
+  "Trailblazer":{"damage":6,"level":2,"moves":[
+    {"name":"Deadly Hit","onUse":"attack(7)","damageShown":"-7"}
+  ]}
+}

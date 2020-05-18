@@ -1,0 +1,13 @@
+{
+  "Poison Blush":"attackplayer(3);",
+  "Poison Flush":"attackplayer(5);",
+  "Royal Flush":"attackplayer(8);",
+  
+  "Explosion":"attackplayer(10);destroySelf()",
+  "Super Explosion":"attackplayer(12);destroySelf()",
+  "Hyper Explosion":"attackplayer(15);destroySelf()",
+  
+  "Mechanical Boomburst":"attackeverything(10)",
+  
+  "Sky Slash":"attackplayer(4);attackplayer(4)"
+}
