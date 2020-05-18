@@ -14,7 +14,7 @@ var selectedTarget = 0
 
 var debugInfo = false // set to true for debug
 
-var screen = "inventory.weapons"
+var screen = "map"
 var levels = [
   {required:0,weapons:[],armor:[],books:[]},
   {required:100,weapons:[],armor:["Leather Armor","Leather Helmet","Leather Leggings","Leather Boots"],books:[],hp:2},
@@ -57,7 +57,7 @@ var player = {
   nxp:250,
   level:0,
   weapon:"Stick",
-  armor:["Leather Helmet","Leather Armor","",""],
+  armor:["","","",""],
   inventory:{
     items:{},
     weapons:{},
