@@ -2,12 +2,28 @@
   "Poison Blush":"attackplayer(3);",
   "Poison Flush":"attackplayer(5);",
   "Royal Flush":"attackplayer(8);",
+  "Clumsy Flush":"attackself(8);",
+  
+  "Gasoline And Rebel":"poisonplayer(3);",
+  
+  "Slash And Burn":"attackplayer(15);sleepself(2)",
   
   "Explosion":"attackplayer(10);destroySelf()",
   "Super Explosion":"attackplayer(12);destroySelf()",
   "Hyper Explosion":"attackplayer(15);destroySelf()",
   
-  "Mechanical Boomburst":"attackeverything(10)",
+  "Mechanical Boomburst":"attackeveryone(10)",
+  "Mechanical Boomblast":"attackeveryone(15)",
   
-  "Sky Slash":"attackplayer(4);attackplayer(4)"
+  "Sky Slash":"attackplayer(4);attackplayer(4)",
+  
+  "Explosion Of Steel":"attackplayer(4);attackplayer(4)",
+  
+  "Troll Launcher":"attackplayer(17);poisonplayer(2)",
+  "One Up":"currentEnemies[currentAttacking].hp += 10",
+  "Trololo":"currentEnemies[currentAttacking].hp += max(0,min(20,currentEnemies[currentAttacking].maxhp-currentEnemies[currentAttacking].hp))",
+  
+  "Boulder Smash":"sleepself(2);attackplayer(30);",
+  "Ground Slash":"attackplayer(3);attackplayer(3);attackplayer(3)",
+  "Bullet Storm":"currentEnemies[currentAttacking].shield += 5"
 }

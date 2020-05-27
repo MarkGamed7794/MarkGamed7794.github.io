@@ -1,21 +1,21 @@
 {
   "Stick":{"damage":2,"level":1,"moves":[
-    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3","description":"Deals 3 damage."}
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
   ]},
   "Long Stick":{"damage":4,"level":2,"moves":[
-    {"name":"Whip and Snack","onUse":"attack(5);","damageShown":"-5","description":"Deals 5 damage."}
+    {"name":"Whip and Snack","onUse":"attack(5);","damageShown":"-5"}
   ]},
   "Normal Spear":{"damage":3,"level":3,"moves":[
-    {"name":"An Idiot Weapon","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn","description":"Applies a 3x damage multiplier, but only 50% of the time."}
+    {"name":"An Idiot Weapon","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn"}
   ]},
   "Frying Pan":{"damage":4,"level":4,"moves":[
-    {"name":"Special Delivery","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn","description":"Applies a 3x damage multiplier, but only 50% of the time."}
+    {"name":"Special Delivery","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn"}
   ]},
   "Sand Launcher":{"damage":12,"level":5,"moves":[
-    {"name":"Blind Man","onUse":"if(currentTurn == 1){stun(1,-1)}","damageShown":"Stuns everyone on turn 1","passive":"turn","description":"Stuns everyone on the first turn of every wave."}
+    {"name":"Blind Man","onUse":"if(currentTurn == 1){stun(1,-1)}","damageShown":"Stuns everyone on turn 1","passive":"turn"}
   ]},
   "Chainsaw":{"damage":25,"level":7,"moves":[
-    {"name":"Screeching Solo","onUse":"attack(5,-1);","damageShown":"-5 to everyone, every turn","description":"Deals 5 damage to every enemy, every turn."}
+    {"name":"Screeching Solo","onUse":"attack(5,-1);","damageShown":"-5 to everyone, every turn","passive":"turn"}
   ]},
   "Balloon Rapier":{"damage":32,"level":9,"moves":[
     {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
@@ -26,7 +26,19 @@
   "Rake":{"damage":69,"level":12,"moves":[
     {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
   ]},
+  
   "Trailblazer":{"damage":6,"level":2,"moves":[
     {"name":"Deadly Hit","onUse":"attack(7)","damageShown":"-7"}
+  ]},
+  "Magic Stick":{"damage":6,"level":3,"moves":[
+    {"name":"Sticky Stick","onUse":"attack(3,-1)","damageShown":"-3 to everyone"}
+  ]},
+  
+  "Turbo Slash Machine":{"damage":16,"level":5,"moves":[
+    {"name":"Sizzle And Choke","onUse":"attackamount += 1","damageShown":"Attack twice","passive":"turn"}
+  ]},
+  
+  "Fungus Steel Explosions":{"damage":16,"level":5,"moves":[
+    {"name":"Hitman Tensions","onUse":"attackall = true","damageShown":"Attacks everyone","passive":"turn"}
   ]}
 }
