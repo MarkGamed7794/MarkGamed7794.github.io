@@ -4,19 +4,81 @@ var worlds = {}
 var moves = {}
 var weapons = {}
 var armor = {}
+var crafting = {}
+var dmsel = 0
+var cratereward = ""
+var quests = {
+  quests:[
+    {name:"Rev 'Em Up",desc:"Equip the Trailblazer.",goal:1,rewards:{coins:500,crystals:0}},
+    {name:"Sneaky Woods",desc:"Complete stage 1-3.",goal:1},
+    {name:"The Bell Tolls You",desc:"Complete stage 1-5.",goal:1},
+    {name:"Fourever Four",desc:"Reach level 4.",goal:4},
+    {name:"Shopping Spree",desc:"Buy any crate from the shop.",goal:1},
+    {name:"War Cry",desc:"Defeat a miniboss.",goal:1},
+    {name:"Bloody Ogres",desc:"Complete stage 2-2.",goal:1},
+    {name:"Puff That Jack Up",desc:"Equip the Pufferfish.",goal:1},
+    {name:"Super Troll",desc:"Equip the Troll Sledgehammer.",goal:1},
+    {name:"Unlucky Thirteen",desc:"Reach level 13.",goal:13},
+    {name:"Movie Director",desc:"Complete stage 2-6.",goal:1},
+    {name:"Outside Help",desc:"Redeem a code.",goal:1},
+    {name:"Clockwork",desc:"Obtain 5 unique pieces of armor, 5 unique books, and 5 unique weapons.",goal:15},
+    {name:"Overdrive",desc:"Obtain 10 unique pieces of armor, 10 unique books, and 10 unique weapons.",goal:30},
+    {name:"Pulverize",desc:"Obtain 15 unique pieces or armor, 15 unique books, and 15 unique weapons.",goal:45},
+    {name:"Events? Whicked.",desc:"Complete an Event Task.",goal:1},
+    {name:"E",desc:"Say E.",goal:1},
+    {name:"Splunter And Grind",desc:"Reach level 20.",goal:20},
+    {name:"World Domination",desc:"Kill a Scarlet Ogre.",goal:1},
+    {name:"Arsonist",desc:"Reach level 30.",goal:30}
+  ]
+}
 var turn = 0 // 0 = player, 1 = enemy
 var currentTurn = 1
-var xpChange = 0
+var xpChange = 1
 var attackamount = 1
 var selectedStage = 0
-var attackall = false
+var attackeveryone = false
 var currentAttacking = 0
 var selectedAttack = 0
 var selectedTarget = 0
+var oneuse = false
+
+var deathmessages = [
+  "Yikes!",
+  "That had to hurt",
+  "Shouldn't have done that.",
+  "lol get rekt n00b",
+  "Oops.",
+  "this is a bruh moment",
+  "This isn't very poggers",
+  "You didn't win, to say the least",
+  "10/10 would watch a death again",
+  "Just like any of my\nrelationships, death isn't\npermanent",
+  "The creepers WILL steal your stuff again",
+  "Maybe try grinding?",
+  "anti poggers",
+  "https://www.youtube.com/\nwatch?v=kiEahw-p9uA",
+  "Bring out the coffin",
+  "Killing the enemies is highly\nreccomended",
+  "This game was a pain to develop",
+  "Run",
+  "If you can read this, good\nfor you",
+  "Oof",
+  "I wouldn't recommend doing\nthat again",
+  "Nice death",
+  "Cleanup on aisle 5",
+  "Sucks to suck!",
+  "Imagine dying"
+]
+
+var transitiontimer = 60
+var transitionto = ""
+
+var crypt
 
 var debugInfo = false // set to true for debug
 
-var screen = "map"
+var screen = "menu"
+
 var levels = [
   {required:0,weapons:[],armor:[],books:[]},
   {required:100,weapons:[],armor:["Leather Armor","Leather Helmet","Leather Leggings","Leather Boots"],books:[],hp:4}, // to level 2
@@ -52,6 +114,7 @@ var levels = [
 var currentEnemies = []
 var damagenumbers = []
 var chanceitems = {}
+var chancematerials = {}
 var chancearmor = {}
 var player = {
   hp:20,
@@ -69,12 +132,17 @@ var player = {
     books:{}
   },
   coins:0,
+  crystals:0,
   poison:0,
-  clears:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  sleep:0,
+  weakness:0,
+  clears:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 }
+
+var encryptkey
 var currentStage = 0;
 var currentWave = 0;
-var xpToGive = 0
+var xpToGive = 0;
 var enemyUsed = ""
 var currentlyAttacking = 0
 var animation = ""
@@ -84,6 +152,7 @@ var damagemultiplier = 1;
 var sv
 var ld
 var sdata
+var shop
 
 function loadAssets(){
   fnt = loadFont("PressStart2P.ttf")
@@ -92,6 +161,8 @@ function loadAssets(){
   moves = loadJSON("moves.json")
   weapons = loadJSON("weapons.json")
   armor = loadJSON("armor.json")
+  crafting = loadJSON("crafting.json")
+  shop = loadJSON("shop.json")
 }
 
 function preload(){
@@ -100,25 +171,118 @@ function preload(){
 
 function setup() {
   createCanvas(768, 720);
+  angleMode(DEGREES)
   loadStage(0)
   
-  xpChange = xpToGive/180
+  //xpChange = xpToGive/180
   
   sv = createButton("Export").mousePressed(function(){
-    sdata.value(btoa(JSON.stringify(player)))
+    sdata.value(
+      encryptkey + " " + CryptoJS.AES.encrypt(JSON.stringify(player), encryptkey)
+    )
   })
   ld = createButton("Import").mousePressed(function(){
     if(screen == "map"){
-      player = JSON.parse(atob(sdata.value()))
+      player = JSON.parse(
+        CryptoJS.enc.Utf8.stringify(CryptoJS.AES.decrypt(sdata.value().split(" ")[1],
+                                                         sdata.value().split(" ")[0])
+      ))
     }
   })
   createElement("br")
   sdata = createElement("textarea","Click \"Export\" to export save data to this textbox, click \"Import\" to load the data in this textbox").size(400,100)
 }
 
+function prepTransition(to){
+  transitionto = to
+  transitiontimer = 0
+}
+
+function calcQuestProgress(name){
+  switch(name){
+    case "Rev 'Em Up":
+      return player.weapon == "Trailblazer" ? 1 : 0
+    case "Sneaky Woods":
+      return player.clears[2]
+    case "The Bell Tolls You":
+      return player.clears[4]
+    case "Fourever Four":
+      return player.level+1
+    case "Shopping Spree":
+      return 0 // todo
+    case "War Cry":
+      return 0 // todo
+    case "Bloody Ogres":
+      return player.clears[7]
+    case "Puff That Jack Up":
+      return player.weapon == "Pufferfish" ? 1 : 0
+    case "Sledge and go Ham":
+      return player.weapon == "Sledgehammer" ? 1 : 0
+    case "Unlucky Thirteen":
+      return player.level+1
+    case "Clockwork":
+      var a = [0,0,0]
+      for(var q in player.inventory.books){
+        if(player.inventory.books[q] > 0){
+          if(a[0] < 5){a[0]++}
+        }
+      }
+      for(var q in player.inventory.armor){
+        if(player.inventory.armor[q] > 0){
+          if(a[1] < 5){a[1]++}
+        }
+      }
+      for(var q in player.inventory.weapons){
+        if(player.inventory.weapons[q] > 0){
+          if(a[2] < 5){a[2]++}
+        }
+      }
+      return min(a[0],5) + min(a[1],5) + min(a[2],5)
+    case "Overdrive":
+      var a = [0,0,0]
+      for(var q in player.inventory.books){
+        if(player.inventory.books[q] > 0){
+          if(a[0] < 10){a[0]++}
+        }
+      }
+      for(var q in player.inventory.armor){
+        if(player.inventory.armor[q] > 0){
+          if(a[1] < 10){a[1]++}
+        }
+      }
+      for(var q in player.inventory.weapons){
+        if(player.inventory.weapons[q] > 0){
+          if(a[2] < 10){a[2]++}
+        }
+      }
+      return min(a[0],10) + min(a[1],10) + min(a[2],10)
+    case "Pulverize":
+      var a = [0,0,0]
+      for(var q in player.inventory.books){
+        if(player.inventory.books[q] > 0){
+          if(a[0] < 15){a[0]++}
+        }
+      }
+      for(var q in player.inventory.armor){
+        if(player.inventory.armor[q] > 0){
+          if(a[1] < 15){a[1]++}
+        }
+      }
+      for(var q in player.inventory.weapons){
+        if(player.inventory.weapons[q] > 0){
+          if(a[2] < 15){a[2]++}
+        }
+      }
+      return min(a[0],15) + min(a[1],15) + min(a[2],15)
+    default:
+      return 0
+  }
+}
+
 function loadStage(stage,wave=0){
   currentStage = stage
   currentWave = wave
+  currentTurn = 0
   switchTurn(0)
   animation = ""
   currentEnemies = worlds.stages[stage].waves[currentWave].enemies
@@ -126,9 +290,12 @@ function loadStage(stage,wave=0){
     currentEnemies[i].hp = currentEnemies[i].maxhp
     currentEnemies[i].sleep = 0
     currentEnemies[i].shield = 0
+    currentEnemies[i].strength = 0
+    currentEnemies[i].protect = 0
   }
   if(wave == 0){
-    damagenumbers = [] 
+    damagenumbers = []
+    oneuse = false
   }
 }
 
@@ -138,25 +305,41 @@ function calcArmorBonus(){
 
 function switchTurn(n){
   if(n == 0){
-    turn = 0
-    damagemultiplier = 1
-    attackamount = 1
-    attackall = false
-    checkPassive("turn")
-    currentAttacking = 0
-    if(player.poison > 0){
-      player.hp -= player.poison
-      damagenumbers.push(
-      {value:-player.poison,x:80+random(-50,50),y:360+random(-50,50),opacity:500,color:color(127,0,255)}
-        )
+    if(player.hp < 1){
+      animation = "death"
+      animationTimer = 0
+      currentTurn++
+    }else if(player.sleep > 1){
+      player.sleep--
+      switchTurn(1)
+    }else{
+      turn = 0
+      currentTurn++
+      damagemultiplier = 1
+      attackamount = 1
+      attackeveryone = false
+      checkPassive("turn")
+      currentAttacking = 0
+
+      if(player.poison > 0){
+        player.hp -= player.poison
+        damagenumbers.push(
+        {value:-player.poison,x:80+random(-50,50),y:360+random(-50,50),opacity:500,color:color(127,0,255)}
+          )
+      }
     }
   }
   if(n == 1){
     enemyUsed = ""
+    checkPassive("attack")
     turn = 1
     damagemultiplier = 1
     attackamount = 1
     enemyAttackTimer = 0
+    for(var q = 0;q < currentEnemies.length;q++){
+      currentEnemies[q].protect = 0
+      currentEnemies[q].fury = 0
+    }
   }
 }
 
@@ -168,7 +351,51 @@ function getLevelName(stage,specific=""){
 
 function attack(damage,target=selectedTarget,mul=damagemultiplier){
   for(var q = 0;q < attackamount;q++){
-    if(target == -1 || attackall){
+    if(target == -1 || attackeveryone){
+      for(var x = 0;x < currentEnemies.length;x++){
+        if(currentEnemies[x].shield > 0){
+          currentEnemies[x].shield -= damage*mul*damagemultiplier-currentEnemies[x].protect
+          damagenumbers.push(
+          {value:-damage*mul*damagemultiplier+currentEnemies[x].protect,
+            x:680+random(-50,50),
+            y:(360-(currentEnemies.length-1)*80)+x*160+random(-50,50),
+            opacity:500,color:color(0,75,255)}
+        )
+        }else{
+          currentEnemies[x].hp -= max(damage*mul*damagemultiplier-currentEnemies[x].protect,0)
+          damagenumbers.push(
+          {value:-max(damage*mul*damagemultiplier-currentEnemies[x].protect,0),
+            x:680+random(-50,50),
+            y:(360-(currentEnemies.length-1)*80)+x*160+random(-50,50),
+            opacity:500}
+            )
+        }
+      }
+    }else{
+        if(currentEnemies[target].shield > 0){
+        currentEnemies[target].shield -= damage*mul*damagemultiplier-currentEnemies[target].protect
+          damagenumbers.push(
+          {value:-damage*mul*damagemultiplier-currentEnemies[target].protect,
+            x:680+random(-50,50),
+            y:(360-(currentEnemies.length-1)*80)+target*160+random(-50,50),
+            opacity:500,color:color(0,75,255)}
+        )
+        }else{
+          currentEnemies[target].hp -= damage*mul*damagemultiplier-currentEnemies[target].protect
+          damagenumbers.push(
+          {value:-damage*mul*damagemultiplier+currentEnemies[target].protect,
+            x:680+random(-50,50),
+            y:(360-(currentEnemies.length-1)*80)+target*160+random(-50,50),
+            opacity:500}
+            )
+        }
+    }
+  }
+}
+
+function attacknomod(damage,mul){
+  for(var q = 0;q < attackamount;q++){
+    if(target == -1 || attackeveryone){
       for(var x = 0;x < currentEnemies.length;x++){
         if(currentEnemies[x].shield > 0){
           currentEnemies[x].shield -= damage*mul
@@ -222,8 +449,8 @@ function gg(){
 
 // enemy functions
 function attackplayer(damage){
-  player.hp -= damage 
-  damagenumbers.push({value:-damage,x:80+random(-50,50),y:360+random(-50,50),opacity:500})
+  player.hp -= round(((damage+currentEnemies[currentAttacking].strength)*(currentEnemies[currentAttacking].fury+1))*(player.weakness+1))
+  damagenumbers.push({value:-round(((damage+currentEnemies[currentAttacking].strength)*(currentEnemies[currentAttacking].fury+1)*(player.weakness+1))),x:80+random(-50,50),y:360+random(-50,50),opacity:500})
 }
 
 function destroySelf(){
@@ -240,7 +467,7 @@ function attackself(damage){
   currentEnemies[currentAttacking].hp -= damage
 }
 
-function attackeveryone(damage){
+function attackall(damage){
   attackplayer(damage)
   for(var x = 0;x < currentEnemies.length;x++){
      attack(damage,x,1)
@@ -283,7 +510,7 @@ function drawBattleScene(){
   fill(255)
   stroke(0)
   strokeWeight(6)
-  text(getLevelName(currentStage) + "\nWave " + (currentWave+1) + "/" + worlds.stages[currentStage].waves.length,20,20)
+  text(getLevelName(currentStage) + "\nWave " + (currentWave+1) + "/" + worlds.stages[currentStage].waves.length + ", Turn " + (currentTurn),20,20)
   
   // the enemy used...
   textAlign(LEFT,BOTTOM)
@@ -313,9 +540,21 @@ function drawBattleScene(){
   text(player.hp + "/" + (player.maxhp+player.armorbonus) + " HP",29,445)
   text(round(player.xp) + "/" + floor(pow(player.level+1,1.6)*30+70) + " XP",29,465)
   text("Level " + (player.level+1),29,485)
+  var ty = 400
   if(player.poison > 0){
     fill(127,0,255)
-    text("Poison " + player.poison,29,400)
+    text("Poison " + player.poison,29,ty)
+    ty -= 32
+  }
+  if(player.sleep > 0){
+    fill(127,0,255)
+    text("Sleep " + player.sleep,29,ty)
+    ty -= 32
+  }
+  if(player.weakness > 0){
+    fill(127,0,255)
+    text("Weakness " + (player.weakness*100) + "%",29,ty)
+    ty -= 32
   }
   fill(255)
   
@@ -342,7 +581,22 @@ function drawBattleScene(){
       text("Shield " + currentEnemies[i].shield,620,ty)
       ty -= 16
     }
-    
+    if(currentEnemies[i].strength > 0){
+      fill(255,75,75)
+      text("Strength " + currentEnemies[i].strength,620,ty)
+      ty -= 16
+    }
+    if(currentEnemies[i].protect > 0){
+      fill(200,55,0)
+      text("Armor " + currentEnemies[i].protect,620,ty)
+      ty -= 16
+    }
+    if(currentEnemies[i].fury > 0){
+      fill(255,0,0)
+      text("Fury " + currentEnemies[i].fury,620,ty)
+      ty -= 16
+    }
+    fill(255)
   }
   
   // damage numbers
@@ -374,7 +628,7 @@ function drawBattleScene(){
         text("Attack (-" + weapons[player.weapon].damage + ")",30,510+i*30)
       }else{
         fill(255)
-        if(weapons[player.weapon].moves[i-1].passive){
+        if(weapons[player.weapon].moves[i-1].passive || (weapons[player.weapon].moves[i-1].oneuse && oneuse)){
           fill(175) 
         }
         rect(20,500+i*30,20+textWidth(weapons[player.weapon].moves[i-1].name + " (" + weapons[player.weapon].moves[i-1].damageShown + ")"),30)
@@ -474,6 +728,12 @@ function drawAnimation(){
             chancearmor[ky] += 1
           }
         }
+        for(var ky in worlds.stages[currentStage].firstrewards.chanceitems){
+          if(random() < worlds.stages[currentStage].firstrewards.chanceitems[ky]){
+            if(!chancematerials.hasOwnProperty(ky)){chancematerials[ky] = 0}
+            chancematerials[ky] += 1
+          }
+        }
       }else{
         for(var ky in worlds.stages[currentStage].rewards.weapons){
           if(random() < worlds.stages[currentStage].rewards.weapons[ky]){
@@ -485,6 +745,12 @@ function drawAnimation(){
           if(random() < worlds.stages[currentStage].rewards.armor[ky]){
             if(!chancearmor.hasOwnProperty(ky)){chancearmor[ky] = 0}
             chancearmor[ky] += 1
+          }
+        }
+        for(var ky in worlds.stages[currentStage].rewards.chanceitems){
+          if(random() < worlds.stages[currentStage].rewards.chanceitems[ky]){
+            if(!chancematerials.hasOwnProperty(ky)){chancematerials[ky] = 0}
+            chancematerials[ky] += 1
           }
         }
       }
@@ -523,6 +789,42 @@ function drawAnimation(){
            rewardsString,width/2,350)
       }
     }
+  }else if(animation == "death"){
+    noStroke()
+    fill(0,0,0,min(150,animationTimer*2))
+    rect(0,0,width,height)
+    stroke(0)
+    textSize(48)
+    textAlign(CENTER,TOP)
+    strokeWeight(12)
+    fill(255,255,100)
+    if(animationTimer == 0){
+      dmselect = deathmessages[floor(random(deathmessages.length))]
+    }
+    if(animationTimer > 60){
+      textSize(24)
+      strokeWeight(6)
+      text(dmselect,width/2,200)
+    }
+    if(animationTimer > 120){
+      textSize(24)
+      strokeWeight(6)
+      text("Click anywhere to continue",width/2,400)
+    }
+  }else if(animation == "crate"){
+    noStroke()
+    fill(0,0,0,min(150,animationTimer*4))
+    rect(0,0,width,height)
+    stroke(0)
+    textSize(48)
+    textAlign(CENTER,TOP)
+    strokeWeight(12)
+    fill(255,255,100)
+    if(animationTimer > 60){
+      textSize(24)
+      strokeWeight(6)
+      text("Reward:\n" + cratereward,width/2-300,300,600)
+    }
   }
   if(animation == "targeting"){
     fill(0,0,0,150)
@@ -536,8 +838,11 @@ function drawAnimation(){
   }
 }
 // ----------------------------  DRAW LOOP ----------------------------
+
 function draw() {
   textFont(fnt)
+  try {
+  encryptkey = floor(random(999999999999)).toString(36)
   if(screen == "fight"){
     background(0,200,0);
     drawBattleScene()
@@ -574,15 +879,21 @@ function draw() {
          300*((player.armorbonus-(player.maxhp+player.armorbonus-player.hp))/(player.maxhp+player.armorbonus)),
          40)}
     fill(0,127,255)
-    rect(width-297,150,300*(player.xp/levels[player.level+1].required),40)
+    rect(width-297,150,300*player.xp/floor(pow(player.level+1,1.6)*30+70),40)
     fill(255)
     text((player.hp) + "/" + (player.maxhp+player.armorbonus) + " HP",7,160)
     text(floor(player.xp) + "/" + floor(pow(player.level+1,1.6)*30+70) + " XP",width-287,160)
+    fill(255,255,150)
     text("$" + player.coins,7,200)
+    fill(0,200,255)
+    text("♦" + player.crystals,7,230)
+    fill(255)
     text("Level " + (player.level+1),width-287,200)
-    rect(-20,height-50,width+40,60)
+    rect(-10,height-50,width-140,60)
+    rect(width-150,height-50,400,60)
     textAlign(CENTER,TOP)
-    text("Inventory",width/2,height-35)
+    text("Inventory",(width-150)/2,height-35)
+    text("Menu",width-72,height-35)
   }
   if(screen == "inventory.items"){
     background(0,200,0)
@@ -642,7 +953,7 @@ function draw() {
          damagenumbers[i].x+3,damagenumbers[i].y+3)
     fill(255,0,0)
     text((damagenumbers[i].value > 0 ? "+" : "") + damagenumbers[i].value,damagenumbers[i].x,damagenumbers[i].y)
-    
+      
     if(damagenumbers[i].opacity < -512){damagenumbers.splice(i,1);i--}
   }
   }
@@ -665,13 +976,15 @@ function draw() {
         strokeWeight(3)
         textSize(12)
         rect(22+(counter%3)*140,20+floor(counter/3)*140,120,120)
-        text(k,22+(counter%3)*140,20+floor(counter/3)*140)
+        text(k,22+(counter%3)*140,20+floor(counter/3)*140,120)
         textSize(24)
         strokeWeight(6)
         text("x" + player.inventory.weapons[k],32+(counter%3)*140,110+floor(counter/3)*140)
       }
       if(player.inventory.weapons[k] > 0){counter++}
     }
+    textSize(24)
+    strokeWeight(6)
     rect(-20,height-50,width+40,60)
     textAlign(CENTER,TOP)
     text("Return To Map",width/2,height-35)
@@ -691,7 +1004,25 @@ function draw() {
     text(player.armor[2],width-300,290,120)
     rect(width-160,290,120,120) // boot
     text(player.armor[3],width-160,290,120)
-    
+    counter = 0
+    for(var k in player.inventory.weapons){
+      if(player.inventory.weapons[k] > 0){
+        if(mouseX > 22+(counter%3)*140 && mouseY > 20+floor(counter/3)*140 && mouseX < 142+(counter%3)*140 && mouseY < 140+floor(counter/3)*140){
+          // tooltip
+          textSize(12)
+          strokeWeight(3)
+          fill(0,0,0,150)
+          rect(mouseX,mouseY,20+(
+            weapons[k].moves.map((x) => 
+            (textWidth(x.name + " (" + x.damageShown + ")\n"))).reduce((a,b) => max(a,b))),44+(12*weapons[k].moves.length))
+          fill(255)
+          textAlign(LEFT,TOP)
+          text("Level " + weapons[k].level + "\n" + weapons[k].damage + " damage\n" +
+               weapons[k].moves.map((x) => (x.name + " (" + x.damageShown + ")\n")),10+mouseX,10+mouseY)
+        }
+      }
+      if(player.inventory.weapons[k] > 0){counter++}
+    }
     
     rect(width-230,480,120,120) // weapon
     text(player.weapon,width-230,480,120)
@@ -726,6 +1057,7 @@ function draw() {
     var counter = 0
     for(var k in player.inventory.armor){
       if(player.inventory.armor[k] > 0){
+        fill(255)
         strokeWeight(3)
         textSize(12)
         rect(22+(counter%3)*140,20+floor(counter/3)*140,120,120)
@@ -733,9 +1065,14 @@ function draw() {
         textSize(24)
         strokeWeight(6)
         text("x" + player.inventory.armor[k],32+(counter%3)*140,110+floor(counter/3)*140)
+        textSize(12)
+        strokeWeight(3)
       }
       if(player.inventory.armor[k] > 0){counter++}
     }
+    fill(255)
+    textSize(24)
+    strokeWeight(6)
     rect(-20,height-50,width+40,60)
     textAlign(CENTER,TOP)
     text("Return To Map",width/2,height-35)
@@ -756,6 +1093,20 @@ function draw() {
     rect(width-160,290,120,120) // boot
     text(player.armor[3],width-160,290,120)
     
+    counter = 0
+    for(var k in player.inventory.armor){
+      if(player.inventory.armor[k] > 0){
+        if(mouseX > 22+(counter%3)*140 && mouseY > 20+floor(counter/3)*140 && mouseX < 142+(counter%3)*140 && mouseY < 140+floor(counter/3)*140){
+          // tooltip
+          fill(0,0,0,150)
+          rect(mouseX,mouseY,20+textWidth("+" + armor[k].def + " HP"),32)
+          fill(255)
+          textAlign(LEFT,TOP)
+          text("+" + armor[k].def + " HP",10+mouseX,10+mouseY)
+        }
+      }
+      if(player.inventory.armor[k] > 0){counter++}
+    }
     
     rect(width-230,480,120,120) // weapon
     text(player.weapon,width-230,480,120)
@@ -774,11 +1125,180 @@ function draw() {
     if(damagenumbers[i].opacity < -512){damagenumbers.splice(i,1);i--}
   }
   }
+  if(screen == "crafting"){
+    background(180)
+    fill(255)
+    stroke(0)
+    strokeWeight(12)
+    textSize(48)
+    textAlign(CENTER,CENTER)
+    text("Lincoln's\nCrafting\nWarehouse",width/2,100)
+    text("<             >",width/2,height/2)
+    textSize(24)
+    strokeWeight(6)
+    if(crafting.recipes[selectedStage].crystals){
+      text(crafting.recipes[selectedStage].crystals + " crystals",width/2,250)
+    }else if(crafting.recipes[selectedStage].coins){
+      text(crafting.recipes[selectedStage].coins.toLocaleString() + " coins",width/2,250)
+    }else if(crafting.recipes[selectedStage].items){
+      for(var i in crafting.recipes[selectedStage].items){
+        text(crafting.recipes[selectedStage].items[i] + "x " + i,width/2,250)
+      }
+    }
+    text(crafting.recipes[selectedStage].weapons,width/2,250)
+    var ableToCraft = true
+    var costString = ""
+    for(var x in crafting.recipes[selectedStage].cost){
+      costString += (player.inventory.items[x] || 0) + "/" + crafting.recipes[selectedStage].cost[x]
+      costString += " " + x
+      costString += "\n"
+      if((player.inventory.items[x] || 0) < crafting.recipes[selectedStage].cost[x]){ableToCraft = false}
+    }
+    costString = costString.substring(0,costString.length-1)
+    text(costString,width/2,375)
+    rect(-50,height-50,999,100)
+    text("Return to Menu",width/2,height-25)
+    if(!ableToCraft){fill(160)}
+    rect(width/2-100,550,200,50)
+    text("Craft!",width/2,575)
+  }
+  if(screen == "quests"){
+    background(200,100,0)
+    fill(255)
+    stroke(0)
+    strokeWeight(12)
+    textSize(48)
+    textAlign(CENTER,CENTER)
+    text("QUEST BOARD",width/2,100-selectedStage)
+    push()
+    translate(width/2,175-selectedStage)
+    for(var i = 0;i < quests.quests.length;i++){
+      push()
+      rotate((((i+1)*3.5)%11.6)-5.8)
+      strokeWeight(6)
+      rect(-300,0,600,150)
+      textSize(24)
+      text((i+1) + ". " + quests.quests[i].name,0,30)
+      textSize(12)
+      strokeWeight(3)
+      text(quests.quests[i].desc,-195,60,400)
+      rect(-250,100,500,35)
+      fill(0,255,0)
+      rect(-250,100,500*min(1,calcQuestProgress(quests.quests[i].name)/quests.quests[i].goal),35)
+      fill(255)
+      textSize(24)
+      strokeWeight(6)
+      text(calcQuestProgress(quests.quests[i].name) + "/" + quests.quests[i].goal,0,120)
+      pop()
+      translate(0,200)
+    }
+    pop()
+    strokeWeight(6)
+    rect(-5,height-50,305,60)
+    rect(300,height-50,300,60)
+    rect(600,height-50,305,60)
+    textSize(24)
+    text("Up",150,height-25)
+    text("Down",450,height-25)
+    text("Menu",684,height-25)
+    
+    if(mouseX > 0 && mouseX < 300 && mouseY > height-50 && mouseY < height && mouseIsPressed){
+      selectedStage -= 5
+    }
+    else if(mouseX < 600 && mouseY > height-50 && mouseY < height && mouseIsPressed){
+      selectedStage += 5
+    }
+    
+  }
+  if(screen == "menu"){
+    selectedStage = 0
+    background(0,200,0)
+    textSize(48)
+    fill(255)
+    textAlign(CENTER,CENTER)
+    strokeWeight(12)
+    stroke(0)
+    text("MYSTICAL",width/2,100+(sin(millis()/15)*30))
+    text("BATTLES",width/2,152+sin((millis()+300)/15)*30)
+    strokeWeight(6)
+    textSize(24)
+    textAlign(LEFT,TOP)
+    fill(255)
+    rect(40,250,40+textWidth("Adventure Mode"),50)
+    text("Adventure Mode",60,265)
+    rect(40,325,40+textWidth("Crafting Warehouse"),50)
+    text("Crafting Warehouse",60,340)
+    rect(40,400,40+textWidth("Quests"),50)
+    text("Quests",60,415)
+    rect(40,475,40+textWidth("Shop"),50)
+    text("Shop",60,490)
+  }
+  if(screen == "shop"){
+    background(180)
+    fill(255)
+    stroke(0)
+    strokeWeight(12)
+    textSize(48)
+    textAlign(CENTER,CENTER)
+    text("Andrew's Spicy\nShop",width/2,100)
+    text("<             >",width/2,height/2)
+    textSize(24)
+    strokeWeight(6)
+    textAlign(LEFT,CENTER)
+    fill(255,255,100)
+    text("$" + player.coins,width/2 - ("$" + player.coins + " ♦" + player.crystals).length*12,200)
+    textAlign(RIGHT,CENTER)
+    fill(100,200,255)
+    text("♦" + player.crystals,width/2 + ("$" + player.coins + " C" + player.crystals).length*12,200)
+    fill(255)
+    textAlign(CENTER,CENTER)
+    text(shop.crates[selectedStage].name,width/2,275)
+    text("Common:    " + nf(shop.crates[selectedStage].prob[0],2) + "%",width/2,330)
+    text("Uncommon:  " + nf(shop.crates[selectedStage].prob[1],2) + "%",width/2,330+28*1)
+    text("Rare:      " + nf(shop.crates[selectedStage].prob[2],2) + "%",width/2,330+28*2)
+    text("Very Rare: " + nf(shop.crates[selectedStage].prob[3],2) + "%",width/2,330+28*3)
+    text("Epic:      " + nf(shop.crates[selectedStage].prob[4],2) + "%",width/2,330+28*4)
+    text("Legendary: " + nf(shop.crates[selectedStage].prob[5],2) + "%",width/2,330+28*5)
+    text("Mythic:    " + nf(shop.crates[selectedStage].prob[6],2) + "%",width/2,330+28*6)
+    
+    strokeWeight(3)
+    rect(width/2-300,550,250,65)
+    rect(width/2+50,550,250,65)
+    strokeWeight(6)
+    text("Purchase",width/2-175,575)
+    text("Purchase",width/2+175,575)
+    textSize(12)
+    strokeWeight(3)
+    fill(255,255,100)
+    text("$" + shop.crates[selectedStage].coincost,width/2-175,600)
+    fill(100,200,255)
+    text("♦" + shop.crates[selectedStage].crystalcost,width/2+175,600)
+    fill(255)
+    rect(-20,height-50,900,100)
+    textSize(24)
+    strokeWeight(6)
+    text("Return To Menu",width/2,height-25)
+  }
   drawAnimation()
   
+  // transition
+  noStroke()
+  fill(0,0,0,255*((30-abs(30-transitiontimer))/30))
+  rect(0,0,width,height)
+  
+  if(transitiontimer == 30){
+    screen = transitionto
+    if(animation == "congrats"){player.clears[selectedStage] += 1}
+    transitionto = ""
+    animation = ""
+  }
+  
+  if(transitiontimer < 60){
+    transitiontimer += 2
+  }
   
   // level up
-  if(xpToGive > 0 && animation == ""){
+  if(xpToGive > 0 && animation == "" && screen == "map"){
     player.xp += xpChange;
     xpToGive -= xpChange;
     
@@ -812,6 +1332,21 @@ function draw() {
                      "\ncurrent attacking: " + currentAttacking +
                      "\ndamagemultiplier: " + damagemultiplier +
                      "\nxp to give: " + xpToGive,5,5,width)
+  } catch (e) {
+    sdata.value("An error occured: \n\n" + e + "\n\nPlease DM this textbox to Mark\n(don't worry, you can still export your data)")
+    fill(0,0,0,127)
+    rect(-10,height/2-50,width+20,100)
+    textAlign(CENTER,CENTER)
+    fill(255)
+    stroke(0)
+    strokeWeight(6)
+    textSize(24)
+    text("Looks like an error occured.",width/2,height/2-25)
+    textSize(12)
+    strokeWeight(3)
+    text("Please check your save data box.",width/2,height/2+25)
+    noLoop()
+  }
 }
 
 // ------------------------ ON CLICK ------------------------
@@ -834,10 +1369,11 @@ function mouseClicked(){
               }
             }
           }else{
-            if(mouseX > 20 && mouseY > 500+i*30 && mouseX < 40+textWidth(weapons[player.weapon].moves[i-1].name + " (" + weapons[player.weapon].moves[i-1].damageShown + ")") && mouseY < 530+i*30 && !weapons[player.weapon].moves[i-1].passive){
+            if(mouseX > 20 && mouseY > 500+i*30 && mouseX < 40+textWidth(weapons[player.weapon].moves[i-1].name + " (" + weapons[player.weapon].moves[i-1].damageShown + ")") && mouseY < 530+i*30 && !weapons[player.weapon].moves[i-1].passive && !(weapons[player.weapon].moves[i-1].oneuse && oneuse)){
               if(currentEnemies.length == 1){
                 selectedTarget = 0
                 eval(weapons[player.weapon].moves[i-1].onUse); // I'm sorry.
+                if(weapons[player.weapon].moves[i-1].oneuse){oneuse = true}
                 switchTurn(1)
               }else{
                 selectedAttack = i-1
@@ -861,8 +1397,10 @@ function mouseClicked(){
       }
       // target selection
     }else if(screen == "map" && animation == ""){
-      if(mouseY > height-50){
-        screen = "inventory.items"
+      if(mouseY > height-50 && mouseX < width-150){
+        prepTransition("inventory.items")
+      }else if(mouseY > height-50){
+        prepTransition("menu")
       }else if(mouseX < 100){
         selectedStage--
         selectedStage = constrain(selectedStage,0,worlds.stages.length-1)
@@ -872,7 +1410,7 @@ function mouseClicked(){
       }else{
         currentWave = 0
         loadStage(selectedStage,0)
-        screen = "fight"
+        prepTransition("fight")
       }
     }else if(screen.substring(0,9) == "inventory" && animation == ""){
       // unequips
@@ -926,7 +1464,7 @@ function mouseClicked(){
       if(screen == "inventory.weapons"){
         var counter = 0
         for(var k in player.inventory.weapons){
-          if(mouseX > 22+(counter%3)*140 && mouseY > 20+floor(counter/3)*140 && mouseX < 22+(counter%3)*140+120 && mouseY < 20+floor(counter/3)*140+120 && !player.weapon){
+          if(mouseX > 22+(counter%3)*140 && mouseY > 20+floor(counter/3)*140 && mouseX < 22+(counter%3)*140+120 && mouseY < 20+floor(counter/3)*140+120 && !player.weapon && weapons[k].level <= player.level+1){
             player.weapon = k
             player.inventory.weapons[k] -= 1
             break
@@ -966,13 +1504,177 @@ function mouseClicked(){
       // return to map
       if(mouseY > height-50){
         if(player.weapon){
-          screen = "map"
+          prepTransition("map")
         }else{
           damagenumbers.push({value:"Equip a weapon!",x:mouseX,y:mouseY,opacity:500})
         }
       }
+    }else if(screen == "menu"){
+      textSize(24)
+      if(mouseX > 40 && mouseY > 250 && mouseX < 80+textWidth("Adventure Mode") && mouseY < 300){prepTransition("map")}
+      if(mouseX > 40 && mouseY > 325 && mouseX < 80+textWidth("Crafting Warehouse") && mouseY < 375){prepTransition("crafting")}
+      if(mouseX > 40 && mouseY > 400 && mouseX < 80+textWidth("Quests") && mouseY < 450){
+        prepTransition("quests")
+      }
+      if(mouseX > 40 && mouseY > 475 && mouseX < 80+textWidth("Encyclopedia") && mouseY < 525){
+        prepTransition("shop")
+      }
     }
-
+    else if(screen == "crafting"){
+      if(mouseY > height-50){
+        prepTransition("menu")
+      }else if(mouseX < 100){
+        selectedStage--
+        selectedStage = constrain(selectedStage,0,crafting.recipes.length-1)
+      }else if(mouseX > width-100){
+        selectedStage++
+        selectedStage = constrain(selectedStage,0,crafting.recipes.length-1)
+      }else if(mouseX > width/2-100 && mouseY > 550 && mouseX < width/2+100 && mouseY < 600){
+        var ableToCraft = true
+        for(var x in crafting.recipes[selectedStage].cost){
+          if((player.inventory.items[x] || 0) < crafting.recipes[selectedStage].cost[x]){ableToCraft = false}
+        }
+        if(ableToCraft){
+          if(crafting.recipes[selectedStage].items){
+            for(var x in crafting.recipes[selectedStage].items){
+              if(!player.inventory.items[x]){
+                player.inventory.items[x] = 0
+              }
+              player.inventory.items[x]++
+            }
+          }
+          if(crafting.recipes[selectedStage].crystals){
+            player.crystals += crafting.recipes[selectedStage].crystals
+          }
+          if(crafting.recipes[selectedStage].coins){
+            player.crystals += crafting.recipes[selectedStage].coins
+          }
+          if(crafting.recipes[selectedStage].weapons){
+            if(!player.inventory.weapons[crafting.recipes[selectedStage].weapons]){
+              player.inventory.weapons[crafting.recipes[selectedStage].weapons] = 0
+            }
+            player.inventory.weapons[crafting.recipes[selectedStage].weapons]++
+          }
+          for(var x in crafting.recipes[selectedStage].cost){
+            player.inventory.items[x] -= crafting.recipes[selectedStage].cost[x]
+          }
+        }
+      }
+    }
+    else if(screen == "shop"){
+      if(mouseY > height-50){
+        prepTransition("menu")
+      }else if(mouseX < 100){
+        selectedStage--
+        selectedStage = constrain(selectedStage,0,shop.crates.length-1)
+      }else if(mouseX > width-100){
+        selectedStage++
+        selectedStage = constrain(selectedStage,0,shop.crates.length-1)
+      }else if(mouseX > width/2-300 && mouseY > 550 && mouseX < width/2-50 && mouseY < 615){
+        // buy with coins
+        if(player.coins >= shop.crates[selectedStage].coincost){
+          player.coins -= shop.crates[selectedStage].coincost
+          var rewards = []
+          var selrar = 0
+          // calc rarity
+          var rn = floor(random(100))
+          if(rn > shop.crates[selectedStage].prob[0]){
+            rn -= shop.crates[selectedStage].prob[0]
+            if(rn > shop.crates[selectedStage].prob[1]){
+              rn -= shop.crates[selectedStage].prob[1]
+              if(rn > shop.crates[selectedStage].prob[2]){
+                rn -= shop.crates[selectedStage].prob[2]
+                if(rn > shop.crates[selectedStage].prob[3]){
+                  rn -= shop.crates[selectedStage].prob[3]
+                  if(rn > shop.crates[selectedStage].prob[4]){
+                    rn -= shop.crates[selectedStage].prob[4]
+                    if(rn > shop.crates[selectedStage].prob[5]){
+                      selrar = 7
+                    }else{
+                      selrar = 6
+                    }
+                  }else{
+                    selrar = 5
+                  }
+                }else{
+                  selrar = 4
+                }
+              }else{
+                selrar = 3
+              }
+            }else{
+              selrar = 2
+            }
+          }else{
+            selrar = 1
+          }
+          for(var k in weapons){
+            if(weapons[k].rarity == selrar){
+              rewards.push(k)
+            }
+          }
+          cratereward = rewards[floor(random(rewards.length))]
+          if(!player.inventory.hasOwnProperty(cratereward)){player.inventory.weapons[cratereward] = 0}
+          player.inventory.weapons[cratereward] += 1
+          animationTimer = 0
+          animation = "crate"
+        }
+      }else if(mouseX > width/2+50 && mouseY > 550 && mouseX < width/2+300 && mouseY < 615){
+        // buy with crystals
+        if(player.crystals >= shop.crates[selectedStage].crystalcost){
+          player.crystals -= shop.crates[selectedStage].crystalcost
+          var rewards = []
+          var selrar = 0
+          // calc rarity
+          var rn = floor(random(100))
+          if(rn > shop.crates[selectedStage].prob[0]){
+            rn -= shop.crates[selectedStage].prob[0]
+            if(rn > shop.crates[selectedStage].prob[1]){
+              rn -= shop.crates[selectedStage].prob[1]
+              if(rn > shop.crates[selectedStage].prob[2]){
+                rn -= shop.crates[selectedStage].prob[2]
+                if(rn > shop.crates[selectedStage].prob[3]){
+                  rn -= shop.crates[selectedStage].prob[3]
+                  if(rn > shop.crates[selectedStage].prob[4]){
+                    rn -= shop.crates[selectedStage].prob[4]
+                    if(rn > shop.crates[selectedStage].prob[5]){
+                      selrar = 7
+                    }else{
+                      selrar = 6
+                    }
+                  }else{
+                    selrar = 5
+                  }
+                }else{
+                  selrar = 4
+                }
+              }else{
+                selrar = 3
+              }
+            }else{
+              selrar = 2
+            }
+          }else{
+            selrar = 1
+          }
+          for(var k in weapons){
+            if(weapons[k].rarity == selrar){
+              rewards.push(k)
+            }
+          }
+          cratereward = rewards[floor(random(rewards.length))]
+          if(!player.inventory.hasOwnProperty(cratereward)){player.inventory.weapons[cratereward] = 0}
+          player.inventory.weapons[cratereward] += 1
+          animationTimer = 0
+          animation = "crate"
+        }
+      }
+    }
+    else if(screen == "quests"){
+      if(mouseX > 600 && mouseY > height-50){
+        prepTransition("menu")
+      }
+    }
     if(animation != "" && animationTimer > 0){
         if(animation == "congrats" && animationTimer > 120){
           if(player.clears[currentStage] == 0){
@@ -990,7 +1692,18 @@ function mouseClicked(){
                 player.inventory.weapons[k] = 0
               }
               player.inventory.weapons[k] += chanceitems[k]
-
+            }
+            for(var k in chancearmor){
+              if(!player.inventory.armor.hasOwnProperty(k)){
+                player.inventory.armor[k] = 0
+              }
+              player.inventory.armor[k] += chancearmor[k]
+            }
+            for(var k in chancearmor){
+              if(!player.inventory.armor.hasOwnProperty(k)){
+                player.inventory.armor[k] = 0
+              }
+              player.inventory.armor[k] += chancearmor[k]
             }
           }else{
             xpToGive += worlds.stages[currentStage].rewards.xp
@@ -1009,9 +1722,7 @@ function mouseClicked(){
                 player.inventory.weapons[k] += chanceitems[k]
             }
           }
-          player.clears[currentStage] += 1
-          screen = "map"
-          animation = ""
+          prepTransition("map")
         }
         if(animation == "levelup" && animationTimer > 120){
           //claim rewards
@@ -1046,6 +1757,12 @@ function mouseClicked(){
               }
             }
           }
+        }
+        if(animation == "death"){
+          prepTransition("map")
+        }
+        if(animation == "crate"){
+          animation = ""
         }
       }
       //damagenumbers.push({value:floor(random(-9,0)),x:mouseX,y:mouseY,opacity:500})

@@ -1,0 +1,11 @@
+{
+  "crates":[
+    {"name":"Common Crate","coincost":1500,"crystalcost":10,"prob":[50,20,12,8,5,4,1]},
+    {"name":"Uncommon Crate","coincost":3000,"crystalcost":20,"prob":[20,38,16,10,8,6,2]},
+    {"name":"Rare Crate","coincost":5500,"crystalcost":35,"prob":[8,17,35,15,13,8,4]},
+    {"name":"Very Rare Crate","coincost":7500,"crystalcost":50,"prob":[4,10,16,35,20,10,5]},
+    {"name":"Epic Crate","coincost":9000,"crystalcost":100,"prob":[0,0,13,25,45,12,5]},
+    {"name":"Legendary Crate","coincost":13000,"crystalcost":150,"prob":[0,0,0,25,25,40,10]},
+    {"name":"Mythic Crate","coincost":17500,"crystalcost":225,"prob":[0,0,0,13,12,55,20]}
+  ]
+}

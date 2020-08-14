@@ -56,7 +56,7 @@
       {"name":"Troll","hp":90,"maxhp":90,"moves":["Troll Launcher","One Up","Trololo"]},
       {"name":"Troll","hp":90,"maxhp":90,"moves":["Troll Launcher","One Up","Trololo"]}
     ]}],
-   "firstrewards":{"xp":800,"coins":800,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{"Troll Face":1}},
+   "firstrewards":{"xp":800,"coins":800,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{"Trollface Helmet":1}},
    "rewards":{"xp":300,"coins":400,"items":{"troll goo":2},"weapons":{},"armor":{}}
   },
   {"world":2,"stage":2,"name":"Ongered","waves":[
@@ -64,9 +64,58 @@
       {"name":"Ogre","hp":127,"maxhp":127,"moves":["Boulder Smash","Ground Slash","Bullet Storm"]}
     ]},
     {"enemies":[
-      {"name":"Ground Ogre","hp":145,"maxhp":145,"moves":["Troll Launcher","One Up","Trololo"]}
+      {"name":"Ground Ogre","hp":145,"maxhp":145,"moves":["Boulder Crash","Ground Blast","Munch And Lunch"]}
     ]}],
-   "firstrewards":{"xp":800,"coins":800,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{"Troll Face":1}},
-   "rewards":{"xp":300,"coins":400,"items":{"troll goo":2},"weapons":{},"armor":{}}
+   "firstrewards":{"xp":1000,"coins":700,"items":{"troll goo":5,"steel":2,"bag of grains":1},"weapons":{},"armor":{}},
+   "rewards":{"xp":450,"coins":400,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{},"chanceitems":{"bag of grains":0.2}}
+  },
+  {"world":2,"stage":3,"name":"Going To War","waves":[
+    {"enemies":[
+      {"name":"Guard","hp":60,"maxhp":60,"moves":["Combustible Shield","Spear Deal"]},
+      {"name":"Guard","hp":60,"maxhp":60,"moves":["Combustible Shield","Spear Deal"]},
+      {"name":"Guard","hp":60,"maxhp":60,"moves":["Combustible Shield","Spear Deal"]}
+    ]},
+    {"enemies":[
+      {"name":"Royale Guard","hp":90,"maxhp":90,"moves":["IKEA Shield","Deadly Hammer"]},
+      {"name":"Royale Guard","hp":90,"maxhp":90,"moves":["IKEA Shield","Deadly Hammer"]}
+      
+    ]},
+    {"enemies":[
+      {"name":"Superior Guard","hp":90,"maxhp":90,"moves":["Crystallized Shield","A Weakling Inside"]}
+    ]}],
+   "firstrewards":{"xp":1000,"coins":800,"items":{"steel":5,"feathers":1},"weapons":{"Royale Scythe":1},"armor":{}},
+   "rewards":{"xp":450,"coins":400,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{},"chanceitems":{}}
+  },
+  {"world":2,"stage":4,"name":"You Little Jackbass","waves":[
+    {"enemies":[
+      {"name":"Jack the Bass","hp":1064,"maxhp":1064,"moves":["Waterfall","Pufferfish Slap"]}
+    ]}],
+   "firstrewards":{"xp":1500,"coins":1500,"items":{"moss":1},"weapons":{"Pufferfish":1},"armor":{}},
+   "rewards":{"xp":700,"coins":800,"items":{"moss":1},"weapons":{},"armor":{},"chanceitems":{}}
+  },
+  {"world":2,"stage":5,"name":"Like A Sledgehammer","waves":[
+    {"enemies":[
+      {"name":"Troll","hp":90,"maxhp":90,"moves":["Troll Launcher","One Up","Trololo"]},
+      {"name":"Troll","hp":90,"maxhp":90,"moves":["Troll Launcher","One Up","Trololo"]}
+    ]},
+    {"enemies":[
+      {"name":"Big Troll","hp":90,"maxhp":90,"moves":["Troll Slam","Lung Cancer","Ketchup Squirm"]}
+    ]}],
+   "firstrewards":{"xp":1500,"coins":2000,"items":{"troll goo":6,"steel":2},"weapons":{},"armor":{}},
+   "rewards":{"xp":750,"coins":900,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{}}
+  },
+  {"world":2,"stage":6,"name":"In Vino Veritas","waves":[
+    {"enemies":[
+      {"name":"Furious Troll","hp":90,"maxhp":90,"moves":["Gurgle And Hurgle","Greasy Laugh","Head Smash","Refreshing Tea"]}
+    ]}],
+   "firstrewards":{"xp":1500,"coins":2000,"items":{"troll goo":6,"steel":2},"weapons":{},"armor":{}},
+   "rewards":{"xp":750,"coins":900,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{}}
+  },
+  {"world":3,"stage":1,"name":"Whipper Snippers","waves":[
+    {"enemies":[
+      {"name":"Crab","hp":158,"maxhp":158,"moves":["Pinch And Dinch","Bleeding Stab","Bloodfall"]}
+    ]}],
+   "firstrewards":{"xp":1500,"coins":2000,"items":{"troll goo":6,"steel":2},"weapons":{},"armor":{}},
+   "rewards":{"xp":750,"coins":900,"items":{"troll goo":3,"steel":1},"weapons":{},"armor":{}}
   }
 ]}
