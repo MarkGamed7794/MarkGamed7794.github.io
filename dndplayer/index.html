@@ -1,0 +1,187 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <link rel="stylesheet" href="main.css">
+        <title>DnD Character</title>
+        <script>
+        var equipmentCount = 0
+        var itemCount = 0
+        var spellCount = 0
+        
+        var experience = 0
+        
+        /* legacy
+        function calcLevel(xp){ // calculates level based on xp
+            //return Math.round(3**level)*100
+            return Math.max(Math.floor(Math.log(xp/100) / Math.log(3))+1,1)
+        }
+            
+        function calcXP(level){ // calculates xp to NEXT level
+            if(level <= 0){return 0}
+            return Math.round(3**level)*100
+        }
+        */
+        
+        function calcLevel(xp){ // calculates level based on xp
+            //return Math.round(3**level)*100
+            var levelToTest = 1;
+            while(calcXP(levelToTest+1) <= xp && levelToTest < 999){
+                levelToTest++
+            }
+            return levelToTest
+        }
+            
+        function calcXP(lev){ // calculates xp to NEXT level
+            var txp = 0
+            for(var level = 0;level < lev;level++){
+                txp += 50 * (level ** 2) - (50 * level)
+            }
+            return txp
+        }
+        
+        function addXP(amt){
+            experience += amt
+            if(calcLevel(experience) < 999){
+                document.getElementById("xpdisp").innerHTML = "Level " + (calcLevel(experience)-1) + " [" + (experience-calcXP(calcLevel(experience))) + "/" + (calcXP(calcLevel(experience)+1)-calcXP(calcLevel(experience))) + "]"
+            }else{
+                document.getElementById("xpdisp").innerHTML = "Level " + (calcLevel(experience)-1) + " [" + (experience-calcXP(calcLevel(experience))) + "]"
+            }
+        }
+        
+        function updateTitle(){
+            document.title = document.getElementById("nameinput").value
+        }
+        function removeEquipment(n){
+            equipmentCount -= 1
+            var toRemove = document.getElementsByClassName("equip" + n)
+            for(var i = toRemove.length-1;i >= 0;i--){
+                toRemove[i].remove()
+            }
+        }
+        function addEquipment(){
+            equipmentCount += 1
+            var cEQ = equipmentCount
+            var newEquipment = document.createElement("input")
+            var btn = document.createElement("button")
+            var br = document.createElement("br")
+            var cbox = document.createElement("input")
+            cbox.type = "checkbox"
+            cbox.classList.add("equip" + equipmentCount)
+            btn.innerHTML = "-"
+            btn.onclick = function(){removeEquipment(cEQ)}
+            //.appendChild(document.createElement("button"))
+            newEquipment.style.width = "200px"
+            newEquipment.style.marginBottom = "3px"
+            var para = document.createElement("p")
+            newEquipment.classList.add("equip" + equipmentCount)
+            btn.classList.add("equip" + equipmentCount)
+            br.classList.add("equip" + equipmentCount)
+            
+            document.getElementById("equipment").appendChild(br)
+            document.getElementById("equipment").appendChild(para.appendChild(newEquipment))
+            document.getElementById("equipment").appendChild(para.appendChild(btn))
+            document.getElementById("equipment").appendChild(para.appendChild(cbox))
+            
+        }
+            
+        function removeItem(n){
+            equipmentCount -= 1
+            var toRemove = document.getElementsByClassName("item" + n)
+            for(var i = toRemove.length-1;i >= 0;i--){
+                toRemove[i].remove()
+            }
+        }
+        function addItem(){
+            itemCount += 1
+            var cEQ = itemCount
+            var newEquipment = document.createElement("input")
+            var btn = document.createElement("button")
+            var br = document.createElement("br")
+            var cbox = document.createElement("input")
+            cbox.type = "checkbox"
+            cbox.classList.add("item" + itemCount)
+            btn.innerHTML = "-"
+            btn.onclick = function(){removeItem(cEQ)}
+            //.appendChild(document.createElement("button"))
+            newEquipment.style.width = "200px"
+            newEquipment.style.marginBottom = "3px"
+            var para = document.createElement("p")
+            newEquipment.classList.add("item" + itemCount)
+            btn.classList.add("item" + itemCount)
+            br.classList.add("item" + itemCount)
+            
+            document.getElementById("items").appendChild(br)
+            document.getElementById("items").appendChild(para.appendChild(newEquipment))
+            document.getElementById("items").appendChild(para.appendChild(btn))
+            //document.getElementById("items").appendChild(para.appendChild(cbox))
+            
+        }
+            
+        function removeSpell(n){
+            spellCount -= 1
+            var toRemove = document.getElementsByClassName("spell" + n)
+            for(var i = toRemove.length-1;i >= 0;i--){
+                toRemove[i].remove()
+            }
+        }
+        function addSpell(){
+            spellCount += 1
+            var cEQ = spellCount
+            var newEquipment = document.createElement("input")
+            var btn = document.createElement("button")
+            var br = document.createElement("br")
+            var cbox = document.createElement("input")
+            cbox.type = "checkbox"
+            cbox.classList.add("spell" + spellCount)
+            btn.innerHTML = "-"
+            btn.onclick = function(){removeSpell(cEQ)}
+            //.appendChild(document.createElement("button"))
+            newEquipment.style.width = "200px"
+            newEquipment.style.marginBottom = "3px"
+            var para = document.createElement("p")
+            newEquipment.classList.add("spell" + spellCount)
+            btn.classList.add("spell" + spellCount)
+            br.classList.add("spell" + spellCount)
+            
+            document.getElementById("spells").appendChild(br)
+            document.getElementById("spells").appendChild(para.appendChild(newEquipment))
+            document.getElementById("spells").appendChild(para.appendChild(btn))
+            //document.getElementById("items").appendChild(para.appendChild(cbox))
+            
+        }
+        </script>
+    </head>
+    <body> 
+        <div class="flexcontainer">
+            <div class="datacontainer">
+                <h2>Name: <input style="width:150px" class="name" id="nameinput" onkeyup="updateTitle()"></h2>
+                <h3><label id="xpdisp">Level 1 [0/100]</label> <input style="width:40px" id="xpamt"><button style="height:20px;margin-top:-3px;margin-bottom:-40px" onclick="addXP(parseInt(document.getElementById('xpamt').value))">+</button></h3>
+                <h3>HP: <input style="width:20px;text-align:center">/<input style="width:20px;text-align:center"></h3>
+                <p>Alignment: True Neutral</p>
+                <p>Race: <input style="width:80px"></p>
+                <p>Background: <input style="width:120px"></p>
+                <p style="margin-bottom:-5px">Money:</p>
+                <p><input style="width:14px"> ep <input style="width:14px"> gp <input style="width:14px"> sp <input style="width:14px"> cp</p>
+            </div>
+            <div class="datacontainer">
+                <h2>Stats</h2>
+                <p>STR: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>DEX: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>CON: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>INT: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>WIS: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>CHA: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+            </div>
+            <div class="datacontainer" id="equipment">
+                <h2 style="margin-bottom:-10px;margin-top:9px">Equipment <button id="equipmentbutton" onclick="addEquipment()">Add New</button></h2>
+            </div>
+            <div class="datacontainer" id="items">
+                <h2 style="margin-bottom:-10px;margin-top:9px">Items <button id="equipmentbutton" onclick="addItem()">Add New</button></h2>
+            </div>
+            <div class="datacontainer" id="spells">
+                <h2 style="margin-bottom:-10px;margin-top:9px">Spells <button id="equipmentbutton" onclick="addSpell()">Add New</button></h2>
+            </div>
+        </div>
+    </body> 
+</html> 
