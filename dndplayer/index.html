@@ -23,10 +23,11 @@
         }
         */
         
+        // ---------- EXPERIENCE ---------- //
         function calcLevel(xp){ // calculates level based on xp
             //return Math.round(3**level)*100
             var levelToTest = 1;
-            while(calcXP(levelToTest+1) <= xp && levelToTest < 999){
+            while(calcXP(levelToTest+1) <= xp && levelToTest <= 999){
                 levelToTest++
             }
             return levelToTest
@@ -42,16 +43,30 @@
         
         function addXP(amt){
             experience += amt
-            if(calcLevel(experience) < 999){
+            if(calcLevel(experience) <= 999){
                 document.getElementById("xpdisp").innerHTML = "Level " + (calcLevel(experience)-1) + " [" + (experience-calcXP(calcLevel(experience))) + "/" + (calcXP(calcLevel(experience)+1)-calcXP(calcLevel(experience))) + "]"
             }else{
                 document.getElementById("xpdisp").innerHTML = "Level " + (calcLevel(experience)-1) + " [" + (experience-calcXP(calcLevel(experience))) + "]"
             }
         }
         
+        // ---------- PAGE TITLE AND ABILITY SCORES ---------- //
         function updateTitle(){
             document.title = document.getElementById("nameinput").value
         }
+            
+        // Ability scores: 1 = -5, 2-3 = -4, ..., 30 = +10
+        function calcAbilityScores(){
+            document.getElementById("strmod").value = (Math.floor(document.getElementById("strscr").value/2)-5)
+            document.getElementById("dexmod").value = (Math.floor(document.getElementById("dexscr").value/2)-5)
+            document.getElementById("conmod").value = (Math.floor(document.getElementById("conscr").value/2)-5)
+            document.getElementById("intmod").value = (Math.floor(document.getElementById("intscr").value/2)-5)
+            document.getElementById("wismod").value = (Math.floor(document.getElementById("wisscr").value/2)-5)
+            document.getElementById("chamod").value = (Math.floor(document.getElementById("chascr").value/2)-5)
+            
+        }
+        
+        // ---------- EQUIPMENT, ITEMS, AND SPELLS ---------- //
         function removeEquipment(n){
             equipmentCount -= 1
             var toRemove = document.getElementsByClassName("equip" + n)
@@ -148,39 +163,132 @@
             document.getElementById("spells").appendChild(para.appendChild(newEquipment))
             document.getElementById("spells").appendChild(para.appendChild(btn))
             //document.getElementById("items").appendChild(para.appendChild(cbox))
+        }
             
+        // ---------- SKILL MODIFIERS ---------- //
+            
+        function calcSkills(){
+            var abilities = ["str","dex","con","int","wis","cha"]
+            var skillids = ["ath","acr","sle","ste","arc","his","inv","nat","rel","ani","ins","med","per","sur","dec","int","perf","pers"]
+            // base values
+            for(var i = 0;i < abilities.length;i++){
+                //console.log(abilities[i])
+                var clselements = document.getElementsByClassName(abilities[i] + "skill")
+                for(var x = 0;x < clselements.length;x++){
+                    clselements[x].innerHTML = document.getElementById(abilities[i] + "mod").value
+                }
+            }
+            
+            for(var i = 0;i < skillids.length;i++){
+                //console.log(skillids[i] + "prof")
+                var cbox = document.getElementById(skillids[i] + "prof")
+                //console.log(cbox)
+                if(cbox.checked){
+                    document.getElementById(skillids[i]).innerHTML = parseInt(document.getElementById(skillids[i],10).innerHTML) + parseInt(document.getElementById("profbonus").value,10)
+                }
+            }
         }
         </script>
     </head>
     <body> 
         <div class="flexcontainer">
             <div class="datacontainer">
-                <h2>Name: <input style="width:150px" class="name" id="nameinput" onkeyup="updateTitle()"></h2>
+                <h2>Name: <input style="width:200px" class="name" id="nameinput" onkeyup="updateTitle()"></h2>
                 <h3><label id="xpdisp">Level 1 [0/100]</label> <input style="width:40px" id="xpamt"><button style="height:20px;margin-top:-3px;margin-bottom:-40px" onclick="addXP(parseInt(document.getElementById('xpamt').value))">+</button></h3>
+                <h3>Class: <input style="width:120px"></h3>
+                <h3>Race: <input style="width:120px"></h3>
                 <h3>HP: <input style="width:20px;text-align:center">/<input style="width:20px;text-align:center"></h3>
-                <p>Alignment: True Neutral</p>
-                <p>Race: <input style="width:80px"></p>
+                <p>Alignment: <input style="width:120px"></p>
                 <p>Background: <input style="width:120px"></p>
-                <p style="margin-bottom:-5px">Money:</p>
-                <p><input style="width:14px"> ep <input style="width:14px"> gp <input style="width:14px"> sp <input style="width:14px"> cp</p>
+                <p style="margin-bottom:-5px">Money: <input style="width:7px"> ep <input style="width:7px"> gp <input style="width:7px"> sp <input style="width:7px"> cp</p>
+                <br>
+                <p>Death Saves: <input type="checkbox" style="outline:4px solid #004400" class="inlinebox">
+                    <input type="checkbox" style="outline:4px solid #004400" class="inlinebox">
+                    <input type="checkbox" style="outline:4px solid #004400" class="inlinebox">
+                    <input type="checkbox" style="outline:4px solid #440000" class="inlinebox">
+                    <input type="checkbox" style="outline:4px solid #440000" class="inlinebox">
+                    <input type="checkbox" style="outline:4px solid #440000" class="inlinebox"></p>
+                
+                <p>Armor Class: <input style="width:21px;text-align:center"> Initiative: <input style="width:21px;text-align:center"></p>
+                <p>Speed: <input style="width:28px;text-align:center"></p>
             </div>
             <div class="datacontainer">
                 <h2>Stats</h2>
-                <p>STR: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
-                <p>DEX: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
-                <p>CON: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
-                <p>INT: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
-                <p>WIS: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
-                <p>CHA: <input style="width:14px;text-align:center"> (<input style="width:14px;text-align:center">)</p>
+                <p>STR: <input id="strmod" style="width:14px;text-align:center"> (<input id="strscr" style="width:14px;text-align:center">)</p>
+                <p>DEX: <input id="dexmod" style="width:14px;text-align:center"> (<input id="dexscr" style="width:14px;text-align:center">)</p>
+                <p>CON: <input id="conmod" style="width:14px;text-align:center"> (<input id="conscr" style="width:14px;text-align:center">)</p>
+                <p>INT: <input id="intmod" style="width:14px;text-align:center"> (<input id="intscr" style="width:14px;text-align:center">)</p>
+                <p>WIS: <input id="wismod" style="width:14px;text-align:center"> (<input id="wisscr" style="width:14px;text-align:center">)</p>
+                <p>CHA: <input id="chamod" style="width:14px;text-align:center"> (<input id="chascr" style="width:14px;text-align:center">)</p>
             </div>
             <div class="datacontainer" id="equipment">
-                <h2 style="margin-bottom:-10px;margin-top:9px">Equipment <button id="equipmentbutton" onclick="addEquipment()">Add New</button></h2>
+                <h2 style="margin-bottom:-10px;margin-top:9px">Equipment <button id="equipmentbutton" onclick="addEquipment()">+</button></h2>
             </div>
             <div class="datacontainer" id="items">
-                <h2 style="margin-bottom:-10px;margin-top:9px">Items <button id="equipmentbutton" onclick="addItem()">Add New</button></h2>
+                <h2 style="margin-bottom:-10px;margin-top:9px">Items <button id="equipmentbutton" onclick="addItem()">+</button></h2>
             </div>
             <div class="datacontainer" id="spells">
-                <h2 style="margin-bottom:-10px;margin-top:9px">Spells <button id="equipmentbutton" onclick="addSpell()">Add New</button></h2>
+                <h2 style="margin-bottom:-10px;margin-top:9px">Spells <button id="equipmentbutton" onclick="addSpell()">+</button></h2>
+            </div>
+            <div class="datacontainer2">
+                    <div class="flex22">
+                    <h2>Skills</h2>
+                    <p>Proficency Bonus: <input id="profbonus" style="width:14px;text-align:center"></p>
+                    <h3>Strength</h3>
+                    <p>Saving Throw: <label class="strskill" id="strsave">0</label></p>
+                    <p>Athletics: <label class="strskill" id="ath">0</label> <input class="inlinebox" type="checkbox" id="athprof"></p>
+                    <br>
+
+                    <h3>Dexterity</h3>
+                    <p>Saving Throw: <label class="dexskill" id="dexsave">0</label></p>
+                    <p>Acrobatics: <label class="dexskill" id="acr">0</label> <input class="inlinebox" type="checkbox" id="acrprof"></p>
+                    <p>Sleight Of Hand: <label class="dexskill" id="sle">0</label> <input class="inlinebox" type="checkbox" id="sleprof"></p>
+                    <p>Stealth: <label class="dexskill" id="ste">0</label> <input class="inlinebox" type="checkbox" id="steprof"></p>
+                    </div>
+                <div class="flex2">
+
+                    <h3>Constitution</h3>
+                    <p>Saving Throw: <label class="conskill" id="consave">0</label></p>
+                    <br>
+
+                    <h3>Intelligence</h3>
+                    <p>Saving Throw: <label class="intskill" id="intsave">0</label></p>
+                    <p>Arcana: <label class="intskill" id="arc">0</label> <input class="inlinebox" type="checkbox" id="arcprof"></p>
+                    <p>History: <label class="intskill"  id="his">0</label> <input class="inlinebox" type="checkbox" id="hisprof"></p>
+                    <p>Investigation: <label class="intskill" id="inv">0</label> <input class="inlinebox" type="checkbox" id="invprof"></p>
+                    <p>Nature: <label class="intskill" id="nat">0</label> <input class="inlinebox" type="checkbox" id="natprof"></p>
+                    <p>Religion: <label class="intskill" id="rel">0</label> <input class="inlinebox" type="checkbox" id="relprof"></p>
+                    </div>
+                <div class="flex2">
+
+                    <h3>Wisdom</h3>
+                    <p>Saving Throw: <label class="wisskill" id="wissave">0</label></p>
+                    <p>Animal Handling: <label class="wisskill" id="ani">0</label> <input class="inlinebox" type="checkbox" id="aniprof"></p>
+                    <p>Insight: <label class="wisskill" id="ins">0</label> <input class="inlinebox" type="checkbox" id="insprof"></p>
+                    <p>Medicine: <label class="wisskill" id="med">0</label> <input class="inlinebox" type="checkbox" id="medprof"></p>
+                    <p>Perception: <label class="wisskill" id="per">0</label> <input class="inlinebox" type="checkbox" id="perprof"></p>
+                    <p>Survival: <label class="wisskill" id="sur">0</label> <input class="inlinebox" type="checkbox" id="surprof"></p>
+                    <br>
+
+                    <h3>Charisma</h3>
+                    <p>Saving Throw: <label class="chaskill" id="chasave">0</label></p>
+                    <p>Deception: <label class="chaskill" id="dec">0</label> <input class="inlinebox" type="checkbox" id="decprof"></p>
+                    <p>Intimidation: <label class="chaskill" id="int">0</label> <input class="inlinebox" type="checkbox" id="intprof"></p>
+                    <p>Performance: <label class="chaskill" id="perf">0</label> <input class="inlinebox" type="checkbox" id="perfprof"></p>
+                    <p>Persuasion: <label class="chaskill" id="pers">0</label> <input class="inlinebox" type="checkbox" id="persprof"></p>
+                    <br>
+                </div>
+            </div>
+            <div class="datacontainer">
+                <h2 style="margin-bottom:-10px;margin-top:9px">Actions</h2>
+                <h1>
+                    <button onclick="calcAbilityScores()">Calculate Ability Modifiers</button><br>
+                    <button onclick="calcSkills()">Update Skill Mods</button>
+                </h1>
+            </div>
+            <div class="datacontainer">
+                <h2>Notes</h2>
+                <textarea style="background-color:#303030;color:#ffffff;font-size:12px"></textarea>
             </div>
         </div>
     </body> 

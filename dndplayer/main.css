@@ -8,7 +8,18 @@
     width:auto;
     height:auto;
     padding:10px;
-    display:block
+    display:block;
+}
+
+.datacontainer2 {
+    width:auto;
+    height:auto;
+    padding:10px;
+    display:flex;
+}
+
+.flex2 {
+    margin-left:10px
 }
 
 p, h2, h3 {
@@ -27,7 +38,11 @@ input {
     background-color:#303030;
     color:white;
     border:none;
-    margin-bottom:-35px
+    margin-bottom:-35px;
+}
+
+.inlinebox {
+    margin-top:-10%;
 }
 
 button {
