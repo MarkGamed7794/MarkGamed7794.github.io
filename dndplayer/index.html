@@ -11,6 +11,10 @@
         
         var experience = 0
         
+        
+        var equipment = []
+        var items = []
+        var spells = []
         /* legacy
         function calcLevel(xp){ // calculates level based on xp
             //return Math.round(3**level)*100
@@ -74,7 +78,7 @@
                 toRemove[i].remove()
             }
         }
-        function addEquipment(){
+        function addEquipment(t=""){
             equipmentCount += 1
             var cEQ = equipmentCount
             var newEquipment = document.createElement("input")
@@ -90,8 +94,10 @@
             newEquipment.style.marginBottom = "3px"
             var para = document.createElement("p")
             newEquipment.classList.add("equip" + equipmentCount)
+            newEquipment.classList.add("equipinput")
             btn.classList.add("equip" + equipmentCount)
             br.classList.add("equip" + equipmentCount)
+            newEquipment.value = t
             
             document.getElementById("equipment").appendChild(br)
             document.getElementById("equipment").appendChild(para.appendChild(newEquipment))
@@ -107,7 +113,7 @@
                 toRemove[i].remove()
             }
         }
-        function addItem(){
+        function addItem(t=""){
             itemCount += 1
             var cEQ = itemCount
             var newEquipment = document.createElement("input")
@@ -123,9 +129,11 @@
             newEquipment.style.marginBottom = "3px"
             var para = document.createElement("p")
             newEquipment.classList.add("item" + itemCount)
+            newEquipment.classList.add("iteminput")
             btn.classList.add("item" + itemCount)
             br.classList.add("item" + itemCount)
             
+            newEquipment.value = t
             document.getElementById("items").appendChild(br)
             document.getElementById("items").appendChild(para.appendChild(newEquipment))
             document.getElementById("items").appendChild(para.appendChild(btn))
@@ -140,7 +148,7 @@
                 toRemove[i].remove()
             }
         }
-        function addSpell(){
+        function addSpell(t=""){
             spellCount += 1
             var cEQ = spellCount
             var newEquipment = document.createElement("input")
@@ -156,10 +164,12 @@
             newEquipment.style.marginBottom = "3px"
             var para = document.createElement("p")
             newEquipment.classList.add("spell" + spellCount)
+            newEquipment.classList.add("spellinput")
             btn.classList.add("spell" + spellCount)
             br.classList.add("spell" + spellCount)
             
             document.getElementById("spells").appendChild(br)
+            newEquipment.value = t
             document.getElementById("spells").appendChild(para.appendChild(newEquipment))
             document.getElementById("spells").appendChild(para.appendChild(btn))
             //document.getElementById("items").appendChild(para.appendChild(cbox))
@@ -188,6 +198,79 @@
                 }
             }
         }
+            
+        // ---------- SAVE/LOAD TO COOKIES ---------- //
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+        
+        function save(){
+            var saveEls = ["nameinput","classinput","race","hpactive","hpmax","alignment","background","pp","gp","sp","cp","armorclass","speed","strscr","dexscr","conscr","intscr","wisscr","chascr","profbonus"]
+            for(var i = 0;i < saveEls.length;i++){
+                document.cookie = saveEls[i] + "=" + document.getElementById(saveEls[i]).value + ";"
+            }
+            
+            equipment = []
+            equips = document.getElementsByClassName("equipinput");
+            for(var i = 0;i < equips.length;i++){
+                equipment.push(equips[i].value)
+            }
+            document.cookie = "equipment=" + (equipment) + ";"
+            
+            items = []
+            equips = document.getElementsByClassName("iteminput");
+            for(var i = 0;i < equips.length;i++){
+                items.push(equips[i].value)
+            }
+            document.cookie = "items=" + (items) + ";"
+            
+            spells = []
+            equips = document.getElementsByClassName("spellinput");
+            for(var i = 0;i < equips.length;i++){
+                spells.push(equips[i].value)
+            }
+            document.cookie = "spells=" + (spells) + ";"
+            document.cookie = "notes=" + document.getElementById("notes").value.replace(/(\r\n|\r|\n)/g,"-") + ";"
+            document.cookie = "experience=" + experience + ";expires=" + "1/1/2080"
+        }
+            
+        function load(){
+            var saveEls = ["nameinput","classinput","race","hpactive","hpmax","alignment","background","pp","gp","sp","cp","armorclass","speed","strscr","dexscr","conscr","intscr","wisscr","chascr","profbonus"]
+            for(var i = 0;i < saveEls.length;i++){
+                document.getElementById(saveEls[i]).value = getCookie(saveEls[i])
+            }
+            
+            equips = JSON.parse("[" + getCookie("equipment").split(",") + "]")
+            for(var i = 0;i < equips.length;i++){
+                addEquipment(equips[i])
+            }
+            
+            equips = JSON.parse("[" + getCookie("items").split(",") + "]")
+            for(var i = 0;i < equips.length;i++){
+                addItem(equips[i])
+            }
+            
+            equips = JSON.parse("[" + getCookie("spells").split(",") + "]")
+            for(var i = 0;i < equips.length;i++){
+                addSpell(equips[i])
+            }
+            
+            addXP(parseInt(getCookie("experience")))
+            
+            document.getElementById("notes").value = getCookie("notes")
+        }
         </script>
     </head>
     <body> 
@@ -195,12 +278,15 @@
             <div class="datacontainer">
                 <h2>Name: <input style="width:200px" class="name" id="nameinput" onkeyup="updateTitle()"></h2>
                 <h3><label id="xpdisp">Level 1 [0/100]</label> <input style="width:40px" id="xpamt"><button style="height:20px;margin-top:-3px;margin-bottom:-40px" onclick="addXP(parseInt(document.getElementById('xpamt').value))">+</button></h3>
-                <h3>Class: <input style="width:120px"></h3>
-                <h3>Race: <input style="width:120px"></h3>
-                <h3>HP: <input style="width:20px;text-align:center">/<input style="width:20px;text-align:center"></h3>
-                <p>Alignment: <input style="width:120px"></p>
-                <p>Background: <input style="width:120px"></p>
-                <p style="margin-bottom:-5px">Money: <input style="width:7px"> ep <input style="width:7px"> gp <input style="width:7px"> sp <input style="width:7px"> cp</p>
+                <h3>Class: <input id="classinput" style="width:120px"></h3>
+                <h3>Race: <input id="race" style="width:120px"></h3>
+                <h3>HP: <input id="hpactive" style="width:20px;text-align:center">/<input id="hpmax" style="width:20px;text-align:center"></h3>
+                <p>Alignment: <input id="alignment" style="width:120px"></p>
+                <p>Background: <input id="background" style="width:120px"></p>
+                <p style="margin-bottom:-5px">Money: <input id="pp" style="width:14px"> pp 
+                    <input id="gp" style="width:14px"> gp 
+                    <input id="sp" style="width:14px"> sp 
+                    <input id="cp" style="width:14px"> cp</p>
                 <br>
                 <p>Death Saves: <input type="checkbox" style="outline:4px solid #004400" class="inlinebox">
                     <input type="checkbox" style="outline:4px solid #004400" class="inlinebox">
@@ -209,8 +295,8 @@
                     <input type="checkbox" style="outline:4px solid #440000" class="inlinebox">
                     <input type="checkbox" style="outline:4px solid #440000" class="inlinebox"></p>
                 
-                <p>Armor Class: <input style="width:21px;text-align:center"> Initiative: <input style="width:21px;text-align:center"></p>
-                <p>Speed: <input style="width:28px;text-align:center"></p>
+                <p>Armor Class: <input id="armorclass" style="width:21px;text-align:center"> Initiative: <input style="width:21px;text-align:center"></p>
+                <p>Speed: <input id="speed" style="width:28px;text-align:center"></p>
             </div>
             <div class="datacontainer">
                 <h2>Stats</h2>
@@ -231,7 +317,7 @@
                 <h2 style="margin-bottom:-10px;margin-top:9px">Spells <button id="equipmentbutton" onclick="addSpell()">+</button></h2>
             </div>
             <div class="datacontainer2">
-                    <div class="flex22">
+                <div class="flex2">
                     <h2>Skills</h2>
                     <p>Proficency Bonus: <input id="profbonus" style="width:14px;text-align:center"></p>
                     <h3>Strength</h3>
@@ -260,7 +346,6 @@
                     <p>Religion: <label class="intskill" id="rel">0</label> <input class="inlinebox" type="checkbox" id="relprof"></p>
                     </div>
                 <div class="flex2">
-
                     <h3>Wisdom</h3>
                     <p>Saving Throw: <label class="wisskill" id="wissave">0</label></p>
                     <p>Animal Handling: <label class="wisskill" id="ani">0</label> <input class="inlinebox" type="checkbox" id="aniprof"></p>
@@ -283,12 +368,13 @@
                 <h2 style="margin-bottom:-10px;margin-top:9px">Actions</h2>
                 <h1>
                     <button onclick="calcAbilityScores()">Calculate Ability Modifiers</button><br>
-                    <button onclick="calcSkills()">Update Skill Mods</button>
+                    <button onclick="calcSkills()">Update Skill Mods</button><br>
+                    <button onclick="save()">Save</button> <button onclick="load()">Load</button>
                 </h1>
             </div>
             <div class="datacontainer">
                 <h2>Notes</h2>
-                <textarea style="background-color:#303030;color:#ffffff;font-size:12px"></textarea>
+                <textarea id="notes" style="background-color:#303030;color:#ffffff;font-size:12px"></textarea>
             </div>
         </div>
     </body> 
