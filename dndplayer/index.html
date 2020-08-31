@@ -227,21 +227,21 @@
             for(var i = 0;i < equips.length;i++){
                 equipment.push(equips[i].value)
             }
-            document.cookie = "equipment=" + (equipment) + ";"
+            document.cookie = "equipment=\"" + (equipment.join('","')) + "\";"
             
             items = []
             equips = document.getElementsByClassName("iteminput");
             for(var i = 0;i < equips.length;i++){
                 items.push(equips[i].value)
             }
-            document.cookie = "items=" + (items) + ";"
+            document.cookie = "items=\"" + (items.join('","')) + "\";"
             
             spells = []
             equips = document.getElementsByClassName("spellinput");
             for(var i = 0;i < equips.length;i++){
                 spells.push(equips[i].value)
             }
-            document.cookie = "spells=" + (spells) + ";"
+            document.cookie = "spells=\"" + (spells.join('","')) + "\";"
             document.cookie = "notes=" + document.getElementById("notes").value.replace(/(\r\n|\r|\n)/g,"□") + ";"
             document.cookie = "experience=" + experience + ";expires=" + "1/1/2080"
             
@@ -254,19 +254,19 @@
                 document.getElementById(saveEls[i]).value = getCookie(saveEls[i])
             }
             
-            equips = JSON.parse("[" + getCookie("equipment").split(",") + "]")
+            equips = JSON.parse("[" + getCookie("equipment") + "]")
             for(var i = 0;i < equips.length;i++){
-                addEquipment(equips[i])
+                addEquipment(equips[i].replace(/uFF02/g,'"'))
             }
             
-            equips = JSON.parse("[" + getCookie("items").split(",") + "]")
+            equips = JSON.parse("[" + getCookie("items") + "]")
             for(var i = 0;i < equips.length;i++){
-                addItem(equips[i])
+                addItem(equips[i].replace(/uFF02/g,'"'))
             }
             
-            equips = JSON.parse("[" + getCookie("spells").split(",") + "]")
+            equips = JSON.parse("[" + getCookie("spells") + "]")
             for(var i = 0;i < equips.length;i++){
-                addSpell(equips[i])
+                addSpell(equips[i].replace(/uFF02/g,'"'))
             }
             
             addXP(parseInt(getCookie("experience")))
