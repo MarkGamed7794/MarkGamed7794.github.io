@@ -242,8 +242,10 @@
                 spells.push(equips[i].value)
             }
             document.cookie = "spells=" + (spells) + ";"
-            document.cookie = "notes=" + document.getElementById("notes").value.replace(/(\r\n|\r|\n)/g,"-") + ";"
+            document.cookie = "notes=" + document.getElementById("notes").value.replace(/(\r\n|\r|\n)/g,"□") + ";"
             document.cookie = "experience=" + experience + ";expires=" + "1/1/2080"
+            
+            return document.cookie
         }
             
         function load(){
@@ -269,8 +271,15 @@
             
             addXP(parseInt(getCookie("experience")))
             
-            document.getElementById("notes").value = getCookie("notes")
+            document.getElementById("notes").value = getCookie("notes").replace(/\u25A1/g,"\n")
         }
+            
+            function promptCode(){
+                var x = window.prompt('Import the code given on export.') + ";expires=" + "1/1/2080"
+                document.cookie = x
+                alert(x)
+                load()
+            }
         </script>
     </head>
     <body> 
@@ -365,16 +374,16 @@
                 </div>
             </div>
             <div class="datacontainer">
+                <h2>Notes</h2>
+                <textarea id="notes" style="background-color:#303030;color:#ffffff;font-size:12px" rows="10" cols="60"></textarea>
+            </div>
+            <div class="datacontainer">
                 <h2 style="margin-bottom:-10px;margin-top:9px">Actions</h2>
                 <h1>
                     <button onclick="calcAbilityScores()">Calculate Ability Modifiers</button><br>
                     <button onclick="calcSkills()">Update Skill Mods</button><br>
-                    <button onclick="save()">Save</button> <button onclick="load()">Load</button>
+                    <button onclick="save()">Save</button> <button onclick="load()">Load</button><br>
                 </h1>
-            </div>
-            <div class="datacontainer">
-                <h2>Notes</h2>
-                <textarea id="notes" style="background-color:#303030;color:#ffffff;font-size:12px"></textarea>
             </div>
         </div>
     </body> 
