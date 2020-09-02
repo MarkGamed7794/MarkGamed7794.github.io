@@ -72,7 +72,7 @@
         
         // ---------- EQUIPMENT, ITEMS, AND SPELLS ---------- //
         function removeEquipment(n){
-            equipmentCount -= 1
+            //equipmentCount -= 1
             var toRemove = document.getElementsByClassName("equip" + n)
             for(var i = toRemove.length-1;i >= 0;i--){
                 toRemove[i].remove()
@@ -107,7 +107,7 @@
         }
             
         function removeItem(n){
-            equipmentCount -= 1
+            //itemCount -= 1
             var toRemove = document.getElementsByClassName("item" + n)
             for(var i = toRemove.length-1;i >= 0;i--){
                 toRemove[i].remove()
@@ -142,7 +142,7 @@
         }
             
         function removeSpell(n){
-            spellCount -= 1
+            //spellCount -= 1
             var toRemove = document.getElementsByClassName("spell" + n)
             for(var i = toRemove.length-1;i >= 0;i--){
                 toRemove[i].remove()
@@ -385,7 +385,7 @@
                     <button onclick="calcSkills()">Update Skill Mods</button><br>
                     <button onclick="save()">Save</button> <button onclick="load()">Load</button><br>
                     <input id="manualsave" style="width:200px"><br>
-                    <button onclick="exp();load()">Export</button> <button onclick="imp()">Import</button>
+                    <button onclick="save();exp()">Export</button> <button onclick="imp();load()">Import</button>
                 </h1>
             </div>
         </div>
