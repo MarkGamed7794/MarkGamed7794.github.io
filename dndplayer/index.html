@@ -274,12 +274,13 @@
             document.getElementById("notes").value = getCookie("notes").replace(/\u25A1/g,"\n")
         }
             
-            function promptCode(){
-                var x = window.prompt('Import the code given on export.') + ";expires=" + "1/1/2080"
-                document.cookie = x
-                alert(x)
-                load()
-            }
+        function exp(){
+            document.getElementById("manualsave").value = document.cookie
+        }
+            
+        function imp(){
+            document.cookie = document.getElementById("manualsave").value
+        }
         </script>
     </head>
     <body> 
@@ -383,6 +384,8 @@
                     <button onclick="calcAbilityScores()">Calculate Ability Modifiers</button><br>
                     <button onclick="calcSkills()">Update Skill Mods</button><br>
                     <button onclick="save()">Save</button> <button onclick="load()">Load</button><br>
+                    <input id="manualsave" style="width:200px"><br>
+                    <button onclick="exp();load()">Export</button> <button onclick="imp()">Import</button>
                 </h1>
             </div>
         </div>
