@@ -4,6 +4,29 @@ body {
     font-size:17px
 }
 
+.flex-container {
+    margin:auto;
+    max-width:1000px;
+    width:80%;
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:row;
+    -webkit-columns: 20em;
+    -moz-columns: 20em;
+    columns: 20em;
+}
+
+.article-box {
+    flex-grow:1;
+    flex-basis:30%;
+    height:auto;
+    padding:0px;
+    margin:10px;
+    display:block;
+    border:#ddd 6px solid;
+    border-radius:30px;
+}
+
 .title-header {
     font-size:80px;
     margin-bottom:0px;
@@ -61,4 +84,14 @@ h1 {
 
 hr {
     border-top: 1px solid #ddd
+}
+
+.noDecoration, a:link, a:visited {
+    color:#000;
+    text-decoration: none!important;
+}
+
+.rounded-top {
+    border-radius: 24px 24px 0px 0px;
+    margin-bottom:-5px;
 }
