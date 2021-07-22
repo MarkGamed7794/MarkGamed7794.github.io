@@ -1,0 +1,177 @@
+{
+  "Stick":{"damage":2,"level":1,"rarity":1,"moves":[
+    {"name":"Whack and Snack","onUse":"attack(3);","damageShown":"-3"}
+  ]},
+  "Long Stick":{"damage":4,"level":2,"rarity":1,"moves":[
+    {"name":"Whip and Snack","onUse":"attack(5);","damageShown":"-5"}
+  ]},
+  "Normal Spear":{"damage":3,"level":3,"rarity":1,"moves":[
+    {"name":"An Idiot Weapon","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn"}
+  ]},
+  "Frying Pan":{"damage":4,"level":4,"rarity":1,"moves":[
+    {"name":"Special Delivery","onUse":"if(random()<0.5){damagemultiplier = 3;}","damageShown":"50% chance of 3x dmg","passive":"turn"}
+  ]},
+  "Sand Launcher":{"damage":12,"level":5,"rarity":1,"moves":[
+    {"name":"Blind Man","onUse":"if(currentTurn == 1){for(var a = 0;a < currentEnemies.length;a++){currentEnemies[a].sleep += 1}}","damageShown":"Stuns everyone on turn 1","passive":"turn"}
+  ]},
+  "Chainsaw":{"damage":25,"level":7,"rarity":1,"moves":[
+    {"name":"Screeching Solo","onUse":"attack(5,-1);","damageShown":"-5 to everyone, every turn","passive":"turn"}
+  ]},
+  "Balloon Rapier":{"damage":32,"level":9,"rarity":1,"moves":[
+    {"name":"Foolin Around","onUse":"attacknomod(32);","damageShown":"Always -32"}
+  ]},
+  "Snow Launcher":{"damage":64,"level":11,"rarity":1,"moves":[
+    {"name":"Fluff Off","onUse":"","damageShown":"Immune to sleep","passive":"turn"}
+  ]},
+  "Rake":{"damage":69,"level":12,"rarity":1,"moves":[
+    {"name":"ACKED","onUse":"attackeveryone = true;","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Cobblestone Hammer":{"damage":0,"level":13,"rarity":1,"moves":[
+    {"name":"Cobblestone Flail","onUse":"attacknomod(165);","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Coornucopia":{"damage":85,"level":14,"rarity":1,"moves":[
+    {"name":"Snacked","onUse":"for(var a = 0;a < currentEnemies.length;a++){if(currentEnemies[a].hp > 400){damagemultiplier *= 2}}","damageShown":"x2 dmg if an enemy has >400 HP","passive":"turn"}
+  ]},
+  "Cloud Spear":{"damage":90,"level":15,"rarity":1,"moves":[
+    {"name":"Cloud Nine","onUse":"player.hp = player.maxhp+20","damageShown":"Heal to max HP +20 once a fight","oneuse":true}
+  ]},
+  "Boomerang":{"damage":80,"level":16,"rarity":1,"moves":[
+    {"name":"Bounceback","onUse":"attackamount += 1","damageShown":"Attacks twice"}
+  ]},
+  "Eight Bit Scythe":{"damage":140,"level":17,"rarity":1,"moves":[
+    {"name":"Low Graphics","onUse":"if(currentEnemies[target].hp >= currentEnemies[target].maxhp/2){attack(280)}","damageShown":"Deals 280 damage to enemies with >50% HP"}
+  ]},
+  "Beam Staff":{"damage":480,"level":19,"rarity":1,"moves":[
+    {"name":"Huge Noise","onUse":"player.sleep += 1","damageShown":"Attack every other turn","passive":"attack"}
+  ]},
+  "Jelly Greatsword":{"damage":470,"level":21,"rarity":1,"moves":[
+    {"name":"Kablam","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"attack"}
+  ]},
+  "Bomb Launcher":{"damage":425,"level":23,"rarity":1,"moves":[
+    {"name":"Overpowered","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Razor Bomb":{"damage":624,"level":25,"rarity":1,"moves":[
+    {"name":"Explosion","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"},
+    {"name":"Recoil","onUse":"player.sleep += 1","damageShown":"Attack every other turn","passive":"attack"}
+  ]},
+  "Goo Launcher":{"damage":900,"level":27,"rarity":1,"moves":[
+    {"name":"Oily Goo","onUse":"player.sleep += 1","damageShown":"Attack every other turn","passive":"attack"}
+  ]},
+  "Hush Puppy":{"damage":896,"level":29,"rarity":1,"moves":[
+    {"name":"Double Hush","onUse":"player.coins += 100","damageShown":"Gain 100 gold on kill","passive":"kill"}
+  ]},
+  "Wooden Crossbow":{"damage":1054,"level":30,"rarity":1,"moves":[
+    {"name":"Crossbow Overheat","onUse":"if(currentTurn > 3){damagemultiplier *= 0.5}","damageShown":"Deals 0.5x damage after turn 3","passive":"turn"}
+  ]},
+  
+  "Trailblazer":{"damage":6,"level":2,"rarity":2,"moves":[
+    {"name":"Deadly Hit","onUse":"attack(7)","damageShown":"-7"}
+  ]},
+  "Magic Stick":{"damage":6,"level":3,"rarity":2,"moves":[
+    {"name":"Sticky Stick","onUse":"attack(3,-1)","damageShown":"-3 to everyone"}
+  ]},
+  "Basic Bow":{"damage":14,"level":5,"rarity":2,"moves":[
+    {"name":"Headshot","onUse":"if(currentTurn%2==0){attack(25)}","damageShown":"-25 on even-numbered turns"}
+  ]},
+  "Anime Rapier":{"damage":14,"level":6,"rarity":2,"moves":[
+    {"name":"Body Pillow","onUse":"if(random()<0.5){damagemultiplier *= 3;}","damageShown":"50% chance of 3x damage"}
+  ]},
+  "Mushsword":{"damage":48,"level":8,"rarity":2,"moves":[
+    {"name":"Engarde!","onUse":"if(random()<0.5){damagemultiplier *= 3;}","damageShown":"50% chance of 3x damage"}
+  ]},
+  "Royale Scythe":{"damage":15,"level":10,"rarity":2,"moves":[
+    {"name":"Mosquito Buster","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"},
+    {"name":"One Of A Kind","onUse":"","damageShown":"Only way to attack Mosquitos","passive":"turn"}
+  ]},
+  "Celestial Daft":{"damage":56,"level":11,"rarity":2,"moves":[
+    {"name":"Till Death Do Us Part","onUse":"if(currentTurn > 2){damagemultiplier *= 3}","damageShown":"x3 dmg after round 2"}
+  ]},
+  "Paws Of Law":{"damage":100,"level":12,"rarity":2,"moves":[
+    {"name":"Paw Swipe","onUse":"attackplayer(-10);attack(80)","damageShown":"-80 to enemy, +10 to you"}
+  ]},
+  "Kilobyleto":{"damage":164,"level":16,"rarity":2,"moves":[
+    {"name":"Kill-O-Byte","onUse":"attackamount += 5;attackplayer(10);attack(164)","damageShown":"Attacks 5 times, -10hp to you"}
+  ]},
+  "Gravedigger":{"damage":244,"level":17,"rarity":2,"moves":[
+    {"name":"Till Death Do Us Part","onUse":"for(var a = 0;a < currentEnemies.length;a++){if(currentEnemies[a].hp < 1){damagemultiplier *= 2}}","damageShown":"x2 dmg for every dead enemy"}
+  ]},
+  "Hell's Scythe":{"damage":485,"level":23,"rarity":2,"moves":[
+    {"name":"Sharpness M","onUse":"if(currentEnemies.length > 1){damagemultiplier *= 2}","damageShown":"x2 dmg if there's more than 1 enemy","passive":"turn"},
+    {"name":"Sharpness X","onUse":"attack(485,-1)","damageShown":"-485 to everyone"}
+  ]},
+  "Windicator":{"damage":1125,"level":28,"rarity":2,"moves":[
+    {"name":"Loud Bullets","onUse":"player.sleep += 1","damageShown":"Attack every other turn","passive":"attack"}
+  ]},
+  
+  "Werewolf Blades":{"damage":10,"level":4,"rarity":3,"moves":[
+    {"name":"Inaccuracy","onUse":"attack(round(random(1,25)))","damageShown":"Deals 1-25 damage"}
+  ]},
+  "Tazer":{"damage":12,"level":5,"rarity":3,"moves":[
+    {"name":"It's Electric","onUse":"currentEnemies[selectedTarget].sleep += 1","damageShown":"Stuns an enemy for 1 turn"}
+  ]},
+  "Jugger Whip":{"damage":10,"level":8,"rarity":3,"moves":[
+    {"name":"This Ain't Legal","onUse":"attackamount += 4","damageShown":"Attack 5 times","passive":"turn"}
+  ]},
+  "Grenade Balls":{"damage":65,"level":10,"rarity":3,"moves":[
+    {"name":"Bloody Arsenal","onUse":"attackamount += 1","damageShown":"Attacks twice","passive":"turn"}
+  ]},
+  "Xyno's Hammer":{"damage":165,"level":11,"rarity":3,"moves":[
+    {"name":"Carnage","onUse":"player.sleep += 2;attack(565)","damageShown":"-565, sleep 2 to you"}
+  ]},
+  "Rogue's Bow":{"damage":200,"level":14,"rarity":3,"moves":[
+    {"name":"Lost Braincell","onUse":"damagemultiplier *= 2","damageShown":"Deals x2 damage","passive":"turn"}
+  ]},
+  "Shurikens":{"damage":20,"level":14,"rarity":3,"moves":[
+    {"name":"Smug-zam","onUse":"attackamount += 14","damageShown":"Attacks 15 times in a row","passive":"turn"}
+  ]},
+  "Pufferfish":{"damage":165,"level":13,"rarity":3,"moves":[
+    {"name":"Poisonous","onUse":"currentEnemies[selectedTarget].poison += 25","damageShown":"Applies poison 25"}
+  ]},
+  "Mossifleur":{"damage":275,"level":15,"rarity":3,"moves":[
+    {"name":"Greusome Attack","onUse":"if(currentTurn > 2){damagemultiplier *= 3}","damageShown":"x3 dmg after round 2"}
+  ]},
+  "Killer Shard":{"damage":200,"level":17,"rarity":3,"moves":[
+    {"name":"Greusome Attack","onUse":"if(currentTurn > 2){damagemultiplier *= 3}","damageShown":"x3 dmg after round 2"}
+  ]},
+  "Butterfly Knife":{"damage":300,"level":18,"rarity":3,"moves":[
+    {"name":"Target","onUse":"for(var a = 0;a < currentEnemies.length;a++){if(currentEnemies[a].hp > 5000){damagemultiplier *= 3;break;}}","damageShown":"x3 dmg if someone has >5000 hp","passive":"turn"}
+  ]},
+  
+  "Instinct Mushsword":{"damage":96,"level":11,"rarity":4,"moves":[
+    {"name":"Ultra Engarde!","onUse":"attack(192);attackplayer(15)","damageShown":"-192 to enemy, -15 to you"}
+  ]},
+  "Constellation Launcher":{"damage":95,"level":12,"rarity":4,"moves":[
+    {"name":"Star Glaze","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Greatsword's Tail":{"damage":125,"level":13,"rarity":4,"moves":[
+    {"name":"Galaxy Glaze","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Spatula":{"damage":285,"level":14,"rarity":4,"moves":[
+    {"name":"Grand Yearly Smack","onUse":"attack(365);","damageShown":"-365"}
+  ]},
+  "Opalian Warblade":{"damage":315,"level":18,"rarity":4,"moves":[
+    {"name":"Inverted Target","onUse":"for(var a = 0;a < currentEnemies.length;a++){if(currentEnemies[a].hp < 5000){damagemultiplier *= 3;break;}}","damageShown":"x3 dmg if someone has <5000 hp","passive":"turn"}
+  ]},
+  "Kornglock":{"damage":580,"level":23,"rarity":4,"moves":[
+    {"name":"Corn & Glock-17","onUse":"attack(350,-1);attack(600)","damageShown":"-600, -350 to everyone, once a fight","oneuse":true}
+  ]},
+
+  "Turbo Slash Machine":{"damage":16,"level":5,"rarity":5,"moves":[
+    {"name":"Sizzle And Choke","onUse":"attackamount += 1","damageShown":"Attacks twice","passive":"turn"}
+  ]},
+  "Fungus Steel Explosives":{"damage":35,"level":8,"rarity":5,"moves":[
+    {"name":"Hitman Tensions","onUse":"attackeveryone = true","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  "Flaming Pulsar":{"damage":85,"level":11,"rarity":5,"moves":[
+    {"name":"Bombshell Of A Death","onUse":"attack(225);player.sleep += 1","damageShown":"Attacks everyone","passive":"turn"}
+  ]},
+  
+  "Flameblazer":{"damage":18,"level":2,"rarity":6,"moves":[
+    {"name":"Burning Hit","onUse":"attack(25)","damageShown":"-25"}
+  ]},
+  
+  "Triple Sevblade":{"damage":0,"level":6,"rarity":6,"moves":[
+    {"name":"Factor of 7","onUse":"attack(floor(random(6,12))*7)","damageShown":"Attacks for a multiple of 7 from 42-84"}
+  ]}
+  
+}

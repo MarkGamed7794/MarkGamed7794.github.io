@@ -1,0 +1,10 @@
+{
+  "Leather Helmet":{"def":1,"rarity":1,"req":1},
+  "Leather Armor":{"def":3,"rarity":1,"req":1},
+  "Leather Leggings":{"def":1,"rarity":1,"req":1},
+  "Leather Boots":{"def":2,"rarity":1,"req":1},
+  "Lapis Armor":{"def":6,"rarity":3,"req":6},
+  "Lapis Leggings":{"def":5,"rarity":3,"req":5},
+  "Lapis Boots":{"def":4,"rarity":3,"req":4},
+  "Trollface Helmet":{"def":9,"rarity":3,"req":9}
+}
