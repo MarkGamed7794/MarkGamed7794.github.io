@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="main.css"></link>
+        <script src="game.js" defer></script>
+    </head>
+    <body>
+        <div class="game-container">
+            <div class="control-panel">
+                <div class="control-layer">
+                    Score <span class="number-display" id="score">0</span> / Best <span class="number-display" id="best">0</span>
+                </div>
+                <div class="control-layer">
+                    <button id="buttonI" class="game-button" onclick="buttonClick('I')" style="--col-world: #42CDF2; --col-classic: #F8634D;">I</button>
+                    <button id="buttonT" class="game-button" onclick="buttonClick('T')" style="--col-world: #F342FE; --col-classic: #42CDF2;">T</button>
+                    <button id="buttonO" class="game-button" onclick="buttonClick('O')" style="--col-world: #E9C843; --col-classic: #E9C843;">O</button>
+                    <button id="buttonS" class="game-button" onclick="buttonClick('S')" style="--col-world: #7CF823; --col-classic: #F342FE;">S</button>
+                    <button id="buttonZ" class="game-button" onclick="buttonClick('Z')" style="--col-world: #F8634D; --col-classic: #7CF823;">Z</button>
+                    <button id="buttonL" class="game-button" onclick="buttonClick('L')" style="--col-world: #FEAD5E; --col-classic: #FEAD5E;">L</button>
+                    <button id="buttonJ" class="game-button" onclick="buttonClick('J')" style="--col-world: #5E6FFB; --col-classic: #5E6FFB;">J</button>
+                </div>
+                <div class="control-layer">
+                    <button id="buttonNewGame" onclick="newGame()">New Game</button>
+                    <button id="buttonReplay" onclick="replaySound()">Replay Sound</button>
+                </div>
+                <div class="control-layer">
+                    <button id="buttonToggleColour" onclick="toggleColour()">World Rule</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
