@@ -7,7 +7,10 @@
     <body>
         <div class="game-container">
             <div class="control-panel">
-                <div class="control-layer">
+                <div class="control-layer" id="sprint-ui" style="display: none;">
+                    Score <span class="number-display" id="sprintscore">0/100</span> / Time <span class="number-display" id="time">0:00.0</span> / Record <span class="number-display" id="sprintbest">-:--.-</span>
+                </div>
+                <div class="control-layer" id="normal-ui">
                     Score <span class="number-display" id="score">0</span> / Best <span class="number-display" id="best">0</span>
                 </div>
                 <div class="control-layer">
@@ -25,6 +28,7 @@
                 </div>
                 <div class="control-layer">
                     <button id="buttonToggleColour" onclick="toggleColour()">World Rule</button>
+                    <button id="buttonToggleMode" onclick="toggleMode()">Normal Mode</button>
                 </div>
             </div>
         </div>
