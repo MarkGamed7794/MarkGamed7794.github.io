@@ -123,7 +123,7 @@ function gameover() {
     }
     best_element.innerHTML = best.toString();
 
-    document.getElementById("buttonToggleMode").disabled = true;
+    document.getElementById("buttonToggleMode").disabled = false;
 }
 
 function replaySound() {
